@@ -7,7 +7,24 @@ import (
 )
 
 type Config struct {
-	Env string `yaml:"env" env-default:"local"`
+	Env        string `yaml:"env" env-default:"local"`
+	HTTPServer `yaml:"http_server"`
+	Clients    ClientsConfig `yaml:"clients"`
+	AppSecret  string        `yaml:"appSecret" env-required:"true" env:"SECRET"`
+}
+
+type HTTPServer struct {
+	Address string `yaml:"address" env-default:"localhost:8080"`
+}
+
+type Client struct {
+	Address      string `yaml:"address"`
+	Timeout      int    `yaml:"timeout"`
+	RetriesCount int    `yaml:"retries_count"`
+}
+
+type ClientsConfig struct {
+	Auth Client `yaml:"auth"`
 }
 
 func MustLoad() *Config {

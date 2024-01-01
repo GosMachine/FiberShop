@@ -1,8 +1,10 @@
 package fiberapp
 
 import (
+	"FiberShop/internal/handlers"
 	"FiberShop/internal/middleware"
 	"FiberShop/internal/routes"
+	"FiberShop/internal/transport/grpc/auth"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/template/html/v2"
@@ -14,18 +16,19 @@ type App struct {
 	app *fiber.App
 }
 
-func New(log *zap.Logger) *App {
+func New(log *zap.Logger, authClient *auth.Client) *App {
 	engine := html.New("./web/templates", ".html")
 	app := fiber.New(fiber.Config{Views: engine})
-	app.Static("/", "./web/static")
 	middle := middleware.New(log)
 	app.Use(middle.Logger, cors.New())
-	routes.SetupPublicRoutes(app)
+	app.Static("/", "./web/static")
+	handle := handlers.New(log, authClient)
+	routes.SetupRoutes(app, handle)
 	return &App{app: app, log: log}
 }
 
-func (a *App) Run() {
-	err := a.app.Listen(":3000")
+func (a *App) Run(adress string) {
+	err := a.app.Listen(adress)
 	if err != nil {
 		panic(err)
 	}
