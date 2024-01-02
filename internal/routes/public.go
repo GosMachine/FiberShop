@@ -6,13 +6,13 @@ import (
 )
 
 func setupPublicRoutes(a *fiber.App, auth *handlers.Handle) {
-	a.Get("/", handlers.HandleHome)
+	a.Get("/", auth.HandleHome)
 	authRoutes(a, auth)
 }
 
 func authRoutes(a *fiber.App, auth *handlers.Handle) {
-	a.Get("/login", handlers.HandleLogin)
+	a.Get("/login", auth.HandleLogin)
 	a.Post("/login", auth.HandleLoginForm)
-	a.Get("/register", handlers.HandleRegister)
+	a.Get("/register", auth.HandleRegister)
 	a.Post("/register", auth.HandleRegisterForm)
 }

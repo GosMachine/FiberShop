@@ -12,12 +12,12 @@ type RequestData struct {
 	Remember string `json:"remember"`
 }
 
-func HandleLogin(c *fiber.Ctx) error {
-	return renderTemplate(c, "account/login")
+func (a *Handle) HandleLogin(c *fiber.Ctx) error {
+	return renderTemplate(c, "account/login", a, fiber.Map{"Title": "Log In"})
 }
 
-func HandleRegister(c *fiber.Ctx) error {
-	return renderTemplate(c, "account/register")
+func (a *Handle) HandleRegister(c *fiber.Ctx) error {
+	return renderTemplate(c, "account/register", a, fiber.Map{"Title": "Sign Up"})
 }
 
 func (a *Handle) HandleLoginForm(c *fiber.Ctx) error {
@@ -48,11 +48,6 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		a.Log.Error(action+" error", zap.Error(err))
 		return err
 	}
-	cookie := fiber.Cookie{
-		Name:   "token",
-		Secure: true,
-		Value:  token,
-	}
-	c.Cookie(&cookie)
+	setCookie("token", token, c)
 	return c.Redirect("/")
 }

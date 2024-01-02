@@ -6,30 +6,17 @@ import (
 	authv1 "github.com/GosMachine/protos/gen/go/auth"
 )
 
-func (c *Client) IsAdmin(ctx context.Context, userID int64) (bool, error) {
-	const op = "grpc.auth.IsAdmin"
-
-	resp, err := c.api.IsAdmin(ctx, &authv1.IsAdminRequest{
-		UserId: userID,
-	})
-	if err != nil {
-		return false, fmt.Errorf("%s: %w", op, err)
-	}
-
-	return resp.IsAdmin, nil
-}
-
-func (c *Client) IsUserLoggedIn(ctx context.Context, token string) (bool, string, error) {
+func (c *Client) User(ctx context.Context, email string) (*authv1.UserResponse, error) {
 	const op = "grpc.auth.IsUserLoggedIn"
 
-	resp, err := c.api.IsUserLoggedIn(ctx, &authv1.IsUserLoggedInRequest{
-		Token: token,
+	resp, err := c.api.User(ctx, &authv1.UserRequest{
+		Email: email,
 	})
 	if err != nil {
-		return false, "", fmt.Errorf("%s: %w", op, err)
+		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	return resp.IsUserLoggedIn, resp.Token, nil
+	return resp, nil
 }
 
 func (c *Client) Login(ctx context.Context, email, password, ip, rememberMe string) (string, error) {
@@ -45,7 +32,7 @@ func (c *Client) Login(ctx context.Context, email, password, ip, rememberMe stri
 		return "", fmt.Errorf("%s: %w", op, err)
 	}
 
-	return resp.Token, nil
+	return resp.GetToken(), nil
 }
 
 func (c *Client) Register(ctx context.Context, email, password, ip, rememberMe string) (string, error) {
@@ -61,5 +48,5 @@ func (c *Client) Register(ctx context.Context, email, password, ip, rememberMe s
 		return "", fmt.Errorf("%s: %w", op, err)
 	}
 
-	return resp.Token, nil
+	return resp.GetToken(), nil
 }

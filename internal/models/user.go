@@ -9,6 +9,7 @@ type User struct {
 	gorm.Model
 	ID            int64  `gorm:"primary_key"`
 	Email         string `gorm:"unique"`
+	Balance       float64
 	PassHash      []byte
 	IpCreated     string
 	LastLoginIp   string

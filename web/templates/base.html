@@ -76,10 +76,9 @@
 
         <!-- Right elements -->
         <div class="relative flex items-center">
-            <a
+            <button
                     id="theme-switcher"
                     class="mr-4 text-neutral-600 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
-                    href="#"
                     data-theme="light">
                 <div class="pointer-events-none">
                     <div
@@ -95,7 +94,8 @@
                         </svg>
                     </div>
                 </div>
-            </a>
+            </button>
+            {{ if .IsAuthenticated }}
             <!-- Cart Icon -->
             <a
                     class="mr-4 text-neutral-600 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
@@ -176,8 +176,6 @@
                     </li>
                 </ul>
             </div>
-
-            <!-- Second dropdown container -->
             <div
                     class="relative"
                     data-te-dropdown-ref
@@ -231,6 +229,22 @@
                     </li>
                 </ul>
             </div>
+            {{ else }}
+            <div class="flex items-center">
+                <a href="/login" role="button" class="inline-flex items-center mr-4 rounded border-emerald-500 text-emerald-500 hover:border-emerald-600 hover:bg-emerald-400 hover:bg-opacity-10 hover:text-emerald-600 focus:border-emerald-700 focus:text-emerald-400 active:border-emerald-800 active:text-emerald-800 dark:border-emerald-300 dark:text-emerald-300 dark:hover:hover:text-white px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0 flex-row-reverse">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ml-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                    </svg>
+                    Log In
+                </a>
+                <a href="/register" role="button" class="inline-flex items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Sign Up
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ml-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+                    </svg>
+                </a>
+            </div>
+            {{ end }}
+
         </div>
     </div>
 </nav>

@@ -6,7 +6,6 @@ import (
 	"FiberShop/internal/lib/logger"
 	"FiberShop/internal/transport/grpc/auth"
 	"context"
-	"fmt"
 	"go.uber.org/zap"
 	"os"
 	"os/signal"
@@ -17,13 +16,12 @@ func main() {
 	cfg := config.MustLoad()
 	log := logger.SetupLogger(cfg.Env)
 	log.Info("starting application", zap.Any("config", cfg))
-	authClient, err := auth.New(context.Background(), log, cfg.Clients.Auth.Address,
+	authClient, err := auth.New(context.Background(), cfg.Clients.Auth.Address,
 		cfg.Clients.Auth.Timeout, cfg.Clients.Auth.RetriesCount)
 	if err != nil {
 		log.Error("failed to init auth client", zap.Error(err))
 		os.Exit(1)
 	}
-	fmt.Println(authClient)
 	application := app.New(log, authClient)
 	go application.FiberApp.Run(cfg.Address)
 	stop := make(chan os.Signal, 1)
