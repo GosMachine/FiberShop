@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"FiberShop/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -15,7 +16,7 @@ func New() (*Storage, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = database.AutoMigrate()
+	err = database.AutoMigrate(models.User{}, models.Product{}, models.Category{})
 	if err != nil {
 		return nil, err
 	}

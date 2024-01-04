@@ -10,7 +10,6 @@ type Config struct {
 	Env        string `yaml:"env" env-default:"local"`
 	HTTPServer `yaml:"http_server"`
 	Clients    ClientsConfig `yaml:"clients"`
-	AppSecret  string        `yaml:"appSecret" env-required:"true" env:"SECRET"`
 }
 
 type HTTPServer struct {

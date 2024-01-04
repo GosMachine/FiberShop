@@ -3,17 +3,8 @@ package middleware
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"go.uber.org/zap"
 	"time"
 )
-
-type App struct {
-	log *zap.Logger
-}
-
-func New(logger *zap.Logger) *App {
-	return &App{log: logger}
-}
 
 func (a *App) Logger(c *fiber.Ctx) error {
 	start := time.Now()

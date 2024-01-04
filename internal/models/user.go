@@ -14,5 +14,8 @@ type User struct {
 	IpCreated     string
 	LastLoginIp   string
 	LastLoginDate time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-	IsAdmin       bool
+}
+
+func (User) Indexes() []string {
+	return []string{"balance"}
 }

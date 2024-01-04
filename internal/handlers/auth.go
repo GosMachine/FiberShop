@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
+	"time"
 )
 
 type RequestData struct {
@@ -28,6 +29,11 @@ func (a *Handle) HandleRegisterForm(c *fiber.Ctx) error {
 	return a.auth(c, "register")
 }
 
+func HandleLogout(c *fiber.Ctx) error {
+	setCookie("token", "delete", c, time.Now().Add(-1*time.Second))
+	return c.Redirect("/")
+}
+
 func (a *Handle) auth(c *fiber.Ctx, action string) error {
 	var (
 		token string
@@ -48,6 +54,10 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		a.Log.Error(action+" error", zap.Error(err))
 		return err
 	}
-	setCookie("token", token, c)
+	expires := time.Now().Add(time.Hour * 24)
+	if data.Remember == "on" {
+		expires = time.Now().Add(time.Hour * 336)
+	}
+	setCookie("token", token, c, expires)
 	return c.Redirect("/")
 }

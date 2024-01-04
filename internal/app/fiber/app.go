@@ -2,6 +2,7 @@ package fiberapp
 
 import (
 	"FiberShop/internal/database/postgres"
+	"FiberShop/internal/database/redis"
 	"FiberShop/internal/handlers"
 	"FiberShop/internal/middleware"
 	"FiberShop/internal/routes"
@@ -17,14 +18,14 @@ type App struct {
 	app *fiber.App
 }
 
-func New(log *zap.Logger, authClient *auth.Client, db *postgres.Storage) *App {
+func New(log *zap.Logger, authClient *auth.Client, db *postgres.Storage, redis *redis.Redis) *App {
 	engine := html.New("./web/templates", ".html")
 	app := fiber.New(fiber.Config{Views: engine})
 	middle := middleware.New(log)
 	app.Use(middle.Logger, cors.New())
 	app.Static("/", "./web/static")
-	handle := handlers.New(log, authClient, db)
-	routes.SetupRoutes(app, handle)
+	handle := handlers.New(log, authClient, db, redis)
+	routes.SetupRoutes(app, handle, middle)
 	return &App{app: app, log: log}
 }
 

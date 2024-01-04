@@ -3,6 +3,7 @@ package app
 import (
 	fiberapp "FiberShop/internal/app/fiber"
 	"FiberShop/internal/database/postgres"
+	"FiberShop/internal/database/redis"
 	"FiberShop/internal/transport/grpc/auth"
 	"go.uber.org/zap"
 )
@@ -16,7 +17,8 @@ func New(log *zap.Logger, authClient *auth.Client) *App {
 	if err != nil {
 		panic(err)
 	}
-	fiberApp := fiberapp.New(log, authClient, db)
+	cache := redis.New(log, db)
+	fiberApp := fiberapp.New(log, authClient, db, cache)
 	return &App{
 		FiberApp: fiberApp,
 	}

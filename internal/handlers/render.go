@@ -5,6 +5,7 @@ import (
 	"FiberShop/internal/utils"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
+	"time"
 )
 
 func renderTemplate(c *fiber.Ctx, tmpl string, a *Handle, data fiber.Map) error {
@@ -16,12 +17,12 @@ func renderTemplate(c *fiber.Ctx, tmpl string, a *Handle, data fiber.Map) error 
 		IsAuthenticated = true
 	}
 	if IsAuthenticated && token != "" {
-		setCookie("token", token, c)
+		setCookie("token", token, c, time.Now().Add(time.Hour*336))
 	}
 	var user models.User
 	if email != "" {
 		var err error
-		user, err = a.Db.User(email)
+		user, err = a.Redis.GetUserCache(email)
 		if err != nil {
 			a.Log.Error("error getting user", zap.Error(err))
 		}
