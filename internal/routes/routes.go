@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupRoutes(a *fiber.App, auth *handlers.Handle, middle *middleware.App) {
-	setupPublicRoutes(a, auth)
+func SetupRoutes(a *fiber.App, handle *handlers.Handle, middle *middleware.App) {
+	setupPublicRoutes(a, handle)
 	setupProtectedRoutes(a, middle)
 }

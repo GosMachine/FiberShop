@@ -5,8 +5,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: FiberShop
-      POSTGRES_PASSWORD: FiberShop
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: FiberShop
     networks:
       - shop

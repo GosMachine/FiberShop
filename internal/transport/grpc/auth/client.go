@@ -31,7 +31,6 @@ func (c *Client) Login(ctx context.Context, email, password, ip, rememberMe stri
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", op, err)
 	}
-
 	return resp.GetToken(), nil
 }
 

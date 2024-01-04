@@ -5,14 +5,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func setupPublicRoutes(a *fiber.App, auth *handlers.Handle) {
-	a.Get("/", auth.HandleHome)
-	authRoutes(a, auth)
+func setupPublicRoutes(a *fiber.App, handle *handlers.Handle) {
+	a.Get("/", handle.HandleHome)
+	//a.Post("/email", handle.HandleEmail)
+	authRoutes(a, handle)
 }
 
-func authRoutes(a *fiber.App, auth *handlers.Handle) {
-	a.Get("/login", auth.HandleLogin)
-	a.Post("/login", auth.HandleLoginForm)
-	a.Get("/register", auth.HandleRegister)
-	a.Post("/register", auth.HandleRegisterForm)
+func authRoutes(a *fiber.App, handle *handlers.Handle) {
+	a.Get("/login", handle.HandleLogin)
+	a.Post("/login", handle.HandleLoginForm)
+	a.Get("/register", handle.HandleRegister)
+	a.Post("/register", handle.HandleRegisterForm)
 }
