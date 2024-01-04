@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func renderTemplate(c *fiber.Ctx, tmpl string, a *Handle, data fiber.Map) error {
+func (a *Handle) renderTemplate(c *fiber.Ctx, tmpl string, data fiber.Map) error {
 	var IsAuthenticated bool
 	//url := c.OriginalURL()
 	//ip := c.IP()

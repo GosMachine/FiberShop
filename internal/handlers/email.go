@@ -11,7 +11,7 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 	action := c.FormValue("action")
 	code := a.Redis.Client.Get(a.Redis.Ctx, "verificationCode:"+email).Val()
 	if postCode != code {
-		return renderTemplate(c, "email", a, fiber.Map{"WrongCode": true, "Email": email, "Action": action})
+		return a.renderTemplate(c, "email", fiber.Map{"WrongCode": true, "Email": email, "Action": action})
 	}
 	switch action {
 	case "register":

@@ -5,9 +5,9 @@ import (
 )
 
 func (a *Handle) HandleHome(c *fiber.Ctx) error {
-	return renderTemplate(c, "index", a, fiber.Map{"Title": "FiberShop"})
+	return a.renderTemplate(c, "index", fiber.Map{"Title": "FiberShop"})
 }
 
 func (a *Handle) HandleAccountRecovery(c *fiber.Ctx) error {
-	return renderTemplate(c, "account/recovery", a, fiber.Map{"Title": "Account recovery"})
+	return a.renderTemplate(c, "account/recovery", fiber.Map{"Title": "Account recovery"})
 }

@@ -14,11 +14,11 @@ type RequestData struct {
 }
 
 func (a *Handle) HandleLogin(c *fiber.Ctx) error {
-	return renderTemplate(c, "account/login", a, fiber.Map{"Title": "Log In"})
+	return a.renderTemplate(c, "account/login", fiber.Map{"Title": "Log In"})
 }
 
 func (a *Handle) HandleRegister(c *fiber.Ctx) error {
-	return renderTemplate(c, "account/register", a, fiber.Map{"Title": "Sign Up"})
+	return a.renderTemplate(c, "account/register", fiber.Map{"Title": "Sign Up"})
 }
 
 func (a *Handle) HandleLoginForm(c *fiber.Ctx) error {
@@ -63,7 +63,7 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		go func(data RequestData) {
 			a.sendEmail(data.Email)
 		}(data)
-		return renderTemplate(c, "email", a, fiber.Map{"Email": data.Email, "Action": "register"})
+		return a.renderTemplate(c, "email", fiber.Map{"Email": data.Email, "Action": "register"})
 	}
 	return c.Redirect("/")
 }
