@@ -19,6 +19,7 @@
                 </h3>
                 <form action="/email" method="post" id="email" data-te-validation-init data-te-active-validation="true">
                     <input type="hidden" name="email" value="{{ .Data.Email }}">
+                    <input type="hidden" name="action" value="{{ .Data.Action }}">
                     <!-- Email input -->
                     <div
                             class="relative mb-2"
@@ -41,10 +42,10 @@
                         </label>
                     </div>
                     <div class="mb-6 flex items-center justify-between">
-                            <a
-                                    href="/resend"
-                                    class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700"
-                            >Resend code</a>
+                        <a
+                                href="/resend"
+                                class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700"
+                        >Resend code</a>
 
                     </div>
                     <div class="container d-flex justify-content-center">
@@ -70,6 +71,19 @@
                             data-te-submit-btn-ref>
                         <span class="font-semibold">Confirm</span>
                     </button>
+                    {{ if eq .Data.Action "register" }}
+                    <!-- Divider -->
+                    <div
+                            class="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
+                        <p
+                                class="mx-4 mb-0 text-center font-semibold dark:text-neutral-200">
+                            <span class="font-semibold">OR</span>
+                        </p>
+                    </div>
+
+                    <!-- Social login buttons -->
+                    <a href="/" role="button" class="font-semibold text-[0.9rem] text-center block w-full rounded bg-[#ee1414] text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-red-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-red-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Remind me later</a>
+                    {{ end }}
                 </form>
             </div>
         </div>

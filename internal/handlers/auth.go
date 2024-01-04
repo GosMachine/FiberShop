@@ -59,5 +59,11 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		expires = time.Now().Add(time.Hour * 336)
 	}
 	setCookie("token", token, c, expires)
+	if action == "register" {
+		go func(data RequestData) {
+			a.sendEmail(data.Email)
+		}(data)
+		return renderTemplate(c, "email", a, fiber.Map{"Email": data.Email, "Action": "register"})
+	}
 	return c.Redirect("/")
 }

@@ -16,11 +16,6 @@
             <!-- Right column container with form -->
             <div  class="md:w-8/12 lg:ml-6 lg:w-5/12">
                 <form action="/login" method="post" id="login" data-te-validation-init data-te-active-validation="true">
-                    <a
-                            href="#!"
-                            class="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
-                    >Forgot password?</a
-                    >
                     <!-- Email input -->
                     <div
                             class="relative mb-6"
@@ -82,6 +77,12 @@
                             </label>
 
                         </div>
+                        <a
+                                href="/account_recovery"
+                                class="text-emerald-500 flex justify-center text-center transition duration-150 ease-in-out hover:text-emerald-600 focus:text-emerald-400 active:text-emerald-800"
+                        >Forgot password?</a
+                        >
+
                         <p class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem] dark:text-neutral-200 text-sm font-semibold">
                             Don't have an account?
                             <a
@@ -91,7 +92,6 @@
                         </p>
 
                     </div>
-
 
                     <!-- Submit button -->
                     <button

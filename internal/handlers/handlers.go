@@ -6,6 +6,9 @@ import (
 	"FiberShop/internal/transport/grpc/auth"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
+	"gopkg.in/gomail.v2"
+	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -30,17 +33,18 @@ func setCookie(name, value string, c *fiber.Ctx, expires time.Time) {
 	c.Cookie(&cookie)
 }
 
-//func sendEmail(email string, redis *redis.Redis) error {
-//	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
-//	redis.Client.Set(redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
-//	message := gomail.NewMessage()
-//	message.SetHeader("From", "support@fiber.shop")
-//	message.SetHeader("To", email)
-//	message.SetHeader("Subject", "FiberShop")
-//	message.SetBody("text/plain", code)
-//	dialer := gomail.NewDialer("smtp.gmail.com", 587, "masterok6000@gmail.com", "atgtullwzawcfexa")
-//	if err := dialer.DialAndSend(message); err != nil {
-//		return err
-//	}
-//	return nil
-//}
+func (a *Handle) sendEmail(email string) {
+	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
+	a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
+	message := gomail.NewMessage()
+	message.SetHeader("From", "support@fiber.shop")
+	message.SetHeader("To", email)
+	message.SetHeader("Subject", "FiberShop")
+	message.SetBody("text/plain", code)
+	dialer := gomail.NewDialer("smtp.gmail.com", 587, "masterok6000@gmail.com", "atgtullwzawcfexa")
+	if err := dialer.DialAndSend(message); err != nil {
+		a.Log.Error("error send verification code "+email, zap.Error(err))
+		return
+	}
+	a.Log.Info("send verification code", zap.String("email", email))
+}

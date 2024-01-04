@@ -15,3 +15,11 @@ func (s *Storage) User(email string) (models.User, error) {
 	}
 	return user, nil
 }
+
+func (s *Storage) UpdateUser(user models.User) error {
+	result := s.db.Save(&user)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}

@@ -7,7 +7,8 @@ import (
 
 func setupPublicRoutes(a *fiber.App, handle *handlers.Handle) {
 	a.Get("/", handle.HandleHome)
-	//a.Post("/email", handle.HandleEmail)
+	a.Post("/email", handle.HandleEmail)
+	a.Get("/account_recovery", handle.HandleAccountRecovery)
 	authRoutes(a, handle)
 }
 
