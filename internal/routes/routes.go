@@ -8,5 +8,5 @@ import (
 
 func SetupRoutes(a *fiber.App, handle *handlers.Handle, middle *middleware.App) {
 	setupPublicRoutes(a, handle)
-	setupProtectedRoutes(a, middle)
+	setupProtectedRoutes(a, middle, handle)
 }

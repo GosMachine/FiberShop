@@ -3,20 +3,10 @@
 <section class="h-screen dark:bg-neutral-800 dark:shadow-black/10 flex justify-center items-center">
   <div class="container h-full px-6 py-24">
     <div class="g-12 flex h-full items-center justify-center">
-      <!-- Left column container with background-->
-
-
-      <!-- Right column container with form -->
       <div  class="md:w-8/12 lg:ml-6 lg:w-4/12">
-<!--        <h1 class="mb-2 mt-3 text-5xl text-center font-bold leading-tight dark:text-neutral-200">-->
-<!--          Getting back into your GosBoost account-->
-<!--        </h1>-->
         <h2 class="mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200">
           Getting back into your GosBoost account
         </h2>
-<!--        <h3 class="mb-3 mt-5 text-2xl text-center font-medium leading-tight dark:text-neutral-200">-->
-<!--          We have sent a 6-digit code to<br><strong>{{ .Data.Email }}</strong>.<br>-->
-<!--        </h3>-->
         <form action="/account_recovery" method="post" id="recovery" data-te-validation-init data-te-active-validation="true">
           <!-- Email input -->
           <div
@@ -38,19 +28,12 @@
             >Email address
             </label>
           </div>
-          <div class="container d-flex justify-content-center">
-            {{ if .Data.WrongEmail }}
-            <p style="color: red;">Invalid email.</p>
-            {{ end }}
-            {{ if .Data.ErrorSend }}
-            <p style="color: red;">Sending error. Please try again.</p>
+          <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
+            {{ if eq .Data.Error "UserIsNotFound" }}
+            <p>User is not found.</p>
             {{ end }}
           </div>
-
-
-          <!-- Submit button -->
           <button
-
                   type="submit"
                   class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0"
                   data-te-ripple-init

@@ -42,24 +42,16 @@
                         </label>
                     </div>
                     <div class="mb-6 flex items-center justify-between">
-                        <a
-                                href="/resend"
-                                class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700"
-                        >Resend code</a>
-
+                        <button type="button" id="resendCodeButton" class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700">Resend code</button>
                     </div>
-                    <div class="container d-flex justify-content-center">
-                        {{ if .Data.WrongCode }}
-                        <p style="color: red;">Incorrect code.</p>
+                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
+                        {{ if eq .Data.Error "WrongCode" }}
+                        <p>Incorrect code.</p>
                         {{ end }}
-                        {{ if .Data.ErrorSend }}
-                        <p style="color: red;">Sending error. Please try again.</p>
-                        {{ end }}
-                        {{ if .Data.CodeTimeError }}
-                        <p style="color: red;">Please use new code.</p>
+                        {{ if eq .Data.Error "CodeTimeError" }}
+                        <p>Confirmation code has expired. Please request a new one</p>
                         {{ end }}
                     </div>
-
 
                     <!-- Submit button -->
                     <button
@@ -89,4 +81,5 @@
         </div>
     </div>
 </section>
+<script src="/js/resend.js"></script>
 {{ template "footer" . }}

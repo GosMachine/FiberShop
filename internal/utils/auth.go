@@ -55,3 +55,7 @@ func updateToken(claims jwt.MapClaims) (string, error) {
 	}
 	return "", nil
 }
+
+func NewToken(email, rememberMe string, duration time.Duration) (string, error) {
+	return gosjwt.NewToken(email, rememberMe, duration)
+}

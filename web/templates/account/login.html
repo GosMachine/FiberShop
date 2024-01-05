@@ -1,11 +1,9 @@
 {{ template "header" . }}
 {{ template "base" . }}
 <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
-<section class="h-screen dark:bg-neutral-800 dark:shadow-black/10">
-    <div class="container h-full px-6 py-24">
-        <div
-                class="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
-            <!-- Left column container with background-->
+<section class="h-screen flex justify-center items-center dark:bg-neutral-800 dark:shadow-black/10">
+    <div class="container h-full px-6 py-24 text-center">
+        <div class="g-6 flex flex-wrap h-full justify-center items-center">
             <div class="mb-12 md:mb-0 md:w-8/12 lg:w-6/12">
                 <img
                         src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
@@ -43,8 +41,8 @@
                             data-te-input-wrapper-init
                             data-te-validate="input"
                             data-te-validation-ruleset="isRequired|isLongerThan(7)"
-                            data-te-invalid-feedback="Please provide a password longer than 7 characters"
-                            data-te-valid-feedback="Your password is longer than 8 characters!">
+                            data-te-invalid-feedback="The password is invalid!"
+                            data-te-valid-feedback="The password is valid!">
                         <input
                                 required
                                 type="password"
@@ -92,8 +90,14 @@
                         </p>
 
                     </div>
-
-                    <!-- Submit button -->
+                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
+                        {{ if eq .Data.Error "InvalidCredentials" }}
+                        <p>Invalid email or password.</p>
+                        {{ end }}
+                        {{ if eq .Data.Error "InternalError" }}
+                        <p>Internal error. Please try again.</p>
+                        {{ end }}
+                    </div>
                     <button
 
                             type="submit"
@@ -114,7 +118,7 @@
                     </div>
 
                     <!-- Social login buttons -->
-                    <a href="#" role="button" class="font-semibold text-[0.9rem] text-center block w-full rounded bg-[#ee1414] text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-red-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-red-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Continue with google</a>
+                    <a href="#" role="button" class="font-semibold mb-12 text-[0.9rem] text-center block w-full rounded bg-[#ee1414] text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-red-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-red-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Continue with google</a>
                 </form>
             </div>
         </div>

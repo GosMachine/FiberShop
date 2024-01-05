@@ -4,6 +4,10 @@ import (
 	"context"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
+	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"strings"
 	"time"
 )
 
@@ -51,8 +55,17 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		token, err = a.Client.Login(context.Background(), data.Email, data.Password, c.IP(), data.Remember)
 	}
 	if err != nil {
-		a.Log.Error(action+" error", zap.Error(err))
-		return err
+		if st, ok := status.FromError(err); ok {
+			if st.Code() == codes.InvalidArgument {
+				a.Log.Error(action+" error", zap.Error(err))
+				return a.renderTemplate(c, "account/"+action, fiber.Map{"Title": strings.Title(action), "Error": "InvalidCredentials"})
+			} else if st.Code() == codes.AlreadyExists {
+				a.Log.Error(action+" error", zap.Error(err))
+				return a.renderTemplate(c, "account/register", fiber.Map{"Title": "Register", "Error": "AlreadyExists"})
+			}
+		}
+		a.Log.Error("login error", zap.Error(err))
+		return a.renderTemplate(c, "account/"+action, fiber.Map{"Title": strings.Title(action), "Error": "InternalError"})
 	}
 	expires := time.Now().Add(time.Hour * 24)
 	if data.Remember == "on" {
@@ -63,7 +76,33 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		go func(data RequestData) {
 			a.sendEmail(data.Email)
 		}(data)
-		return a.renderTemplate(c, "email", fiber.Map{"Email": data.Email, "Action": "register"})
+		return a.renderTemplate(c, "email", fiber.Map{"Title": "Email", "Email": data.Email, "Action": "register"})
+	}
+	return c.Redirect("/")
+}
+
+func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {
+	pass := c.FormValue("password")
+	email := c.FormValue("email")
+	action := c.FormValue("action")
+	passHash, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.MinCost)
+	if err != nil {
+		a.Log.Error("failed to generate password hash", zap.Error(err))
+	}
+	user, err := a.Redis.GetUserCache(email)
+	if err != nil {
+		a.Log.Error("failed to get user cache", zap.Error(err))
+	}
+	user.PassHash = passHash
+	user.LastLoginIp = c.IP()
+	user.LastLoginDate = time.Now()
+	err = a.Db.UpdateUser(user)
+	if err != nil {
+		a.Log.Error("failed to update user", zap.Error(err))
+	}
+	a.Log.Info("password changed successfully", zap.String("email", email))
+	if action == "change_pass" {
+		return c.Redirect("/account")
 	}
 	return c.Redirect("/")
 }
