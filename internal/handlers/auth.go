@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"github.com/gofiber/fiber/v2"
+	"github.com/shareed2k/goth_fiber"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
@@ -52,7 +53,7 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 	case "register":
 		token, err = a.Client.Register(context.Background(), data.Email, data.Password, c.IP(), data.Remember)
 	case "login":
-		token, err = a.Client.Login(context.Background(), data.Email, data.Password, c.IP(), data.Remember)
+		token, err = a.Client.Login(context.Background(), data.Email, data.Password, c.IP(), data.Remember, "default")
 	}
 	if err != nil {
 		if st, ok := status.FromError(err); ok {
@@ -105,4 +106,20 @@ func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {
 		return c.Redirect("/account")
 	}
 	return c.Redirect("/")
+}
+
+func (a *Handle) HandleAuthCallback(ctx *fiber.Ctx) error {
+	user, err := goth_fiber.CompleteUserAuth(ctx)
+	if err != nil {
+		return err
+	}
+	token, err := a.Client.Login(context.Background(), user.Email, "", ctx.IP(), "on", "OAuth")
+	if err != nil {
+		a.Log.Error("login error", zap.Error(err))
+		return a.renderTemplate(ctx, "account/login", fiber.Map{"Title": "Log In", "Error": "InternalError"})
+	}
+	expires := time.Now().Add(time.Hour * 336)
+
+	setCookie("token", token, ctx, expires)
+	return ctx.Redirect("/")
 }

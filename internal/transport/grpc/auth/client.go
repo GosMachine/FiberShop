@@ -19,7 +19,7 @@ func (c *Client) User(ctx context.Context, email string) (*authv1.UserResponse, 
 	return resp, nil
 }
 
-func (c *Client) Login(ctx context.Context, email, password, ip, rememberMe string) (string, error) {
+func (c *Client) Login(ctx context.Context, email, password, ip, rememberMe, AuthMethod string) (string, error) {
 	const op = "grpc.auth.Login"
 
 	resp, err := c.api.Login(ctx, &authv1.LoginRequest{
@@ -27,6 +27,7 @@ func (c *Client) Login(ctx context.Context, email, password, ip, rememberMe stri
 		Password:   password,
 		IP:         ip,
 		RememberMe: rememberMe,
+		AuthMethod: AuthMethod,
 	})
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", op, err)

@@ -10,7 +10,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/template/html/v2"
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/providers/google"
 	"go.uber.org/zap"
+	"os"
 )
 
 type App struct {
@@ -22,10 +25,14 @@ func New(log *zap.Logger, authClient *auth.Client, db *postgres.Storage, redis *
 	engine := html.New("./web/templates", ".html")
 	app := fiber.New(fiber.Config{Views: engine})
 	middle := middleware.New(log)
-	app.Use(middle.Logger, cors.New())
-	app.Static("/", "./web/static")
+	goth.UseProviders(
+		google.New(os.Getenv("googleClientKey"), os.Getenv("googleClientSecret"), "http://localhost:3000/auth/callback/google"),
+	)
 	handle := handlers.New(log, authClient, db, redis)
+	app.Use(middle.Logger, cors.New())
 	routes.SetupRoutes(app, handle, middle)
+	app.Static("/", "./web/static")
+	app.Use(handle.HandleNotFound)
 	return &App{app: app, log: log}
 }
 

@@ -25,3 +25,7 @@ func (a *Handle) HandleAccountRecoveryForm(c *fiber.Ctx) error {
 	}(email)
 	return a.renderTemplate(c, "email", fiber.Map{"Title": "Email", "Email": email, "Action": "account_recovery"})
 }
+
+func (a *Handle) HandleNotFound(c *fiber.Ctx) error {
+	return a.renderTemplate(c, "404", fiber.Map{"Title": "Page not found"})
+}
