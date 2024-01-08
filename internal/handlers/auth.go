@@ -35,7 +35,7 @@ func (a *Handle) HandleRegisterForm(c *fiber.Ctx) error {
 }
 
 func HandleLogout(c *fiber.Ctx) error {
-	setCookie("token", "delete", c, time.Now().Add(-1*time.Second))
+	SetCookie("token", "delete", c, time.Now().Add(-1*time.Second))
 	return c.Redirect("/")
 }
 
@@ -72,7 +72,7 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 	if data.Remember == "on" {
 		expires = time.Now().Add(time.Hour * 336)
 	}
-	setCookie("token", token, c, expires)
+	SetCookie("token", token, c, expires)
 	if action == "register" {
 		go func(data RequestData) {
 			a.sendEmail(data.Email)
@@ -120,6 +120,6 @@ func (a *Handle) HandleAuthCallback(ctx *fiber.Ctx) error {
 	}
 	expires := time.Now().Add(time.Hour * 336)
 
-	setCookie("token", token, ctx, expires)
+	SetCookie("token", token, ctx, expires)
 	return ctx.Redirect("/")
 }

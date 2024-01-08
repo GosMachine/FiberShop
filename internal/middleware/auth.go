@@ -1,16 +1,22 @@
 package middleware
 
 import (
+	"FiberShop/internal/handlers"
+	"FiberShop/internal/utils"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
-	"os"
+	"time"
 )
 
 func (a *App) IsAuthenticated(c *fiber.Ctx) error {
-	_, err := jwt.Parse(c.Cookies("token"), func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("SECRET")), nil
-	})
-	if err != nil {
+	var IsAuthenticated bool
+	email, token := utils.IsUserLoggedIn(c.Cookies("token"), a.log)
+	if email != "" {
+		IsAuthenticated = true
+	}
+	if IsAuthenticated && token != "" {
+		handlers.SetCookie("token", token, c, time.Now().Add(time.Hour*336))
+	}
+	if !IsAuthenticated {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
 	}
 	return c.Next()

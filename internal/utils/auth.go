@@ -18,7 +18,7 @@ func IsUserLoggedIn(token string, Log *zap.Logger) (string, string) {
 
 	log.Debug("checking IsUserLoggedIn")
 
-	email, tokenData := isTokenValid(token)
+	email, tokenData := IsTokenValid(token)
 	if email != "" {
 		var err error
 		token, err = updateToken(tokenData)
@@ -31,7 +31,7 @@ func IsUserLoggedIn(token string, Log *zap.Logger) (string, string) {
 	return email, token
 }
 
-func isTokenValid(token string) (string, jwt.MapClaims) {
+func IsTokenValid(token string) (string, jwt.MapClaims) {
 	tokenData, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("SECRET")), nil
 	})

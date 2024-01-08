@@ -23,7 +23,7 @@ func New(log *zap.Logger, client *auth.Client, db *postgres.Storage, redis *redi
 	return &Handle{Log: log, Client: client, Db: db, Redis: redis}
 }
 
-func setCookie(name, value string, c *fiber.Ctx, expires time.Time) {
+func SetCookie(name, value string, c *fiber.Ctx, expires time.Time) {
 	cookie := fiber.Cookie{
 		Name:    name,
 		Secure:  true,
