@@ -3,16 +3,13 @@ package handlers
 import (
 	"FiberShop/internal/models"
 	"FiberShop/internal/utils"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
-	"time"
 )
 
 func (a *Handle) renderTemplate(c *fiber.Ctx, tmpl string, data fiber.Map) error {
 	//url := c.OriginalURL()
 	//ip := c.IP()
-	timeStart := time.Now()
 	var isAuthenticated bool
 	email, _ := utils.IsTokenValid(c.Cookies("token"))
 	var user models.User
@@ -27,14 +24,15 @@ func (a *Handle) renderTemplate(c *fiber.Ctx, tmpl string, data fiber.Map) error
 	FinalData := struct {
 		IsAuthenticated bool
 		Balance         float64
+		Email           string
 		//Viewers        string
 		Data interface{}
 	}{
 		IsAuthenticated: isAuthenticated,
 		Balance:         user.Balance,
+		Email:           email,
 		//Viewers:        viewersCount,
 		Data: data,
 	}
-	fmt.Println(time.Since(timeStart))
 	return c.Render(tmpl, FinalData)
 }

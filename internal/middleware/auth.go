@@ -17,7 +17,7 @@ func (a *App) IsAuthenticated(c *fiber.Ctx) error {
 		handlers.SetCookie("token", token, c, time.Now().Add(time.Hour*336))
 	}
 	if !IsAuthenticated {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+		return c.Redirect("/login")
 	}
 	return c.Next()
 }
