@@ -3,15 +3,12 @@ package redis
 import (
 	"FiberShop/internal/models"
 	"FiberShop/internal/utils"
-	"fmt"
 	"go.uber.org/zap"
 	"time"
 )
 
 func (r *Redis) GetUserCache(email string) (models.User, error) {
-	timeStart := time.Now()
 	userData, err := r.Client.Get(r.Ctx, "UserData:"+email).Result()
-	fmt.Println(time.Since(timeStart))
 	if err == nil && userData != "" {
 		if err != nil {
 			r.Log.Error("error get user data from cache", zap.Error(err))

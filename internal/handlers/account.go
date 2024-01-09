@@ -8,7 +8,11 @@ import (
 )
 
 func (a *Handle) HandleAccount(c *fiber.Ctx) error {
-	return a.renderTemplate(c, "account/base", fiber.Map{"Title": "My Account"})
+	return a.renderTemplate(c, "account/index", fiber.Map{"Title": "My Account"})
+}
+
+func (a *Handle) HandleAccountSettings(c *fiber.Ctx) error {
+	return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings"})
 }
 
 func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {
