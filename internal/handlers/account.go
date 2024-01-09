@@ -15,17 +15,30 @@ func (a *Handle) HandleAccountSettings(c *fiber.Ctx) error {
 	return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings"})
 }
 
+func (a *Handle) HandleSettingsChangeEmail(c *fiber.Ctx) error {
+	email := c.FormValue("email")
+	newEmail := c.FormValue("newEmail")
+	if _, err := a.Db.User(newEmail); err == nil {
+		return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings", "Error": "EmailAlreadyUsed"})
+	}
+	go func(email string) {
+		a.Redis.Client.Set(a.Redis.Ctx, "change_email:"+email, newEmail, time.Minute*30)
+		a.sendEmail(email)
+	}(email)
+	return a.renderTemplate(c, "email", fiber.Map{"Title": "Email", "Email": email, "Action": "change_email"})
+}
+
 func (a *Handle) HandleSettingsChangePass(c *fiber.Ctx) error {
 	pass := c.FormValue("password")
 	email := c.FormValue("email")
 	user, err := a.Redis.GetUserCache(email)
 	if err != nil {
 		a.Log.Error("error getting user", zap.Error(err))
-		return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings", "Error": "InternalError"})
+		return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings", "Error": "PasswordInternalError"})
 	}
 	if err := bcrypt.CompareHashAndPassword(user.PassHash, []byte(pass)); err != nil {
 		a.Log.Error("password wrong", zap.Error(err))
-		return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings", "Error": "InvalidCredentials"})
+		return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings", "Error": "PasswordInvalidCredentials"})
 	}
 	return a.renderTemplate(c, "account/change_pass", fiber.Map{"Title": "Change pass", "Email": email, "Action": "change_pass"})
 }

@@ -47,7 +47,7 @@ func updateToken(claims jwt.MapClaims) (string, error) {
 	rememberMe := claims["remember"].(string)
 	exp := time.Unix(int64(claims["exp"].(float64)), 0)
 	if exp.Sub(time.Now()) <= 48*time.Hour && rememberMe == "on" {
-		token, err := gosjwt.NewToken(email, rememberMe, time.Duration(time.Now().Add(time.Hour*336).Unix()))
+		token, err := NewToken(email, rememberMe, time.Duration(time.Now().Add(time.Hour*336).Unix()))
 		if err != nil {
 			return "", err
 		}

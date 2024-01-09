@@ -3,10 +3,7 @@
 <section class="flex justify-center">
     <div class="h-full px-6 py-12 text-center">
         <div class="g-12 flex h-full items-center justify-center">
-            <!-- Left column container with background-->
 
-
-            <!-- Right column container with form -->
             <div  class="w-full">
                 <h1 class="mb-2 mt-3 text-5xl text-center font-bold leading-tight dark:text-neutral-200">
                     Confirm email
@@ -15,7 +12,7 @@
                     Enter your verification code
                 </h2>
                 <h3 class="mb-3 mt-5 text-2xl text-center font-medium leading-tight dark:text-neutral-200">
-                    We have sent a 6-digit code to<br><strong>{{ .Data.Email }}</strong>.<br>
+                    We have sent a 6-digit code to<br><strong class="text-[16px] md:text-[24px]">{{ .Data.Email }}</strong>.<br>
                 </h3>
                 <form action="/email" method="post" id="email" data-te-validation-init data-te-active-validation="true">
                     <input type="hidden" name="email" value="{{ .Data.Email }}">
@@ -50,6 +47,9 @@
                         {{ end }}
                         {{ if eq .Data.Error "CodeTimeError" }}
                         <p>Confirmation code has expired. Please request a new one</p>
+                        {{ end }}
+                        {{ if eq .Data.Error "InternalError" }}
+                        <p>Internal error. Please try again.</p>
                         {{ end }}
                     </div>
 

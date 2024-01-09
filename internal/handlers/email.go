@@ -31,13 +31,40 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 		token, err := utils.NewToken(email, "", time.Hour*24)
 		if err != nil {
 			a.Log.Error("error create newToken", zap.Error(err))
-			return err
+			return a.renderTemplate(c, "email", fiber.Map{"Error": "InternalError", "Email": email, "Action": action})
 		}
 		SetCookie("token", token, c, time.Now().Add(time.Hour*24))
 		return a.renderTemplate(c, "account/change_pass", fiber.Map{"Title": "Change pass", "Email": email, "Action": action})
 	case "change_email":
-	}
+		newEmail, err := a.Redis.Client.Get(a.Redis.Ctx, "change_email:"+email).Result()
+		if err != nil {
+			a.Log.Error("error get newEmail", zap.Error(err))
+			return a.renderTemplate(c, "email", fiber.Map{"Error": "InternalError", "Email": email, "Action": action})
+		}
+		user, err := a.Redis.GetUserCache(email)
+		if err != nil {
+			a.Log.Error("error getting user cache", zap.Error(err))
+			return a.renderTemplate(c, "email", fiber.Map{"Error": "InternalError", "Email": email, "Action": action})
+		}
+		user.Email = newEmail
+		err = a.Db.UpdateUser(user)
+		if err != nil {
+			a.Log.Error("error change email", zap.Error(err))
+			return a.renderTemplate(c, "email", fiber.Map{"Error": "InternalError", "Email": email, "Action": action})
+		}
 
+		if err := a.Redis.SetUserCache(user); err != nil {
+			a.Redis.Log.Error("error set userCache", zap.Error(err))
+		}
+		a.Redis.Client.Del(a.Redis.Ctx, "change_email:"+email)
+		token, err := utils.NewToken(newEmail, "on", time.Hour*336)
+		if err != nil {
+			a.Log.Error("error create newToken", zap.Error(err))
+			return a.renderTemplate(c, "email", fiber.Map{"Error": "InternalError", "Email": email, "Action": action})
+		}
+		SetCookie("token", token, c, time.Now().Add(time.Hour*336))
+	}
+	a.Redis.Client.Del(a.Redis.Ctx, "verificationCode:"+email)
 	return c.Redirect("/")
 }
 
@@ -52,7 +79,7 @@ func (a *Handle) emailVerification(email string) {
 		a.Log.Error("error email verification", zap.Error(err))
 	}
 	if err := a.Redis.SetUserCache(user); err != nil {
-		a.Redis.Log.Error("error ser userCache", zap.Error(err))
+		a.Redis.Log.Error("error set userCache", zap.Error(err))
 	}
 }
 

@@ -10,6 +10,7 @@
             <div  class="md:w-8/12 w-full lg:ml-6 lg:w-5/12">
                 <form action="/account/settings/change_email" method="post" id="change_email" data-te-validation-init data-te-active-validation="true">
                     <!-- Email input -->
+                    <input type="hidden" name="email" value="{{ .Email }}">
                     <div
                             class="relative mb-6"
                             data-te-input-wrapper-init
@@ -20,26 +21,22 @@
                         <input
                                 type="email"
                                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                                id="email"
-                                name="email"
+                                id="newEmail"
+                                name="newEmail"
                                 placeholder="Email address" required/>
                         <label
-                                for="email"
+                                for="newEmail"
                                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
                         >New Email address
                         </label>
                     </div>
                     <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
-                        {{ if eq .Data.Error "InvalidCredentials" }}
-                        <p>Invalid email or password.</p>
-                        {{ end }}
-                        {{ if eq .Data.Error "AlreadyExists" }}
-                        <p>User already exists.</p>
-                        {{ end }}
-                        {{ if eq .Data.Error "InternalError" }}
+                        {{ if eq .Data.Error "EmailInternalError" }}
                         <p>Internal error. Please try again.</p>
                         {{ end }}
-                        <p id="emailMatchMessage"></p>
+                        {{ if eq .Data.Error "EmailAlreadyUsed" }}
+                        <p>This email address is already in use</p>
+                        {{ end }}
                     </div>
                     <button
 
@@ -85,10 +82,10 @@
                         </label>
                     </div>
                     <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
-                        {{ if eq .Data.Error "InvalidCredentials" }}
-                        <p>Invalid email or password.</p>
+                        {{ if eq .Data.Error "PasswordInvalidCredentials" }}
+                        <p>Invalid password.</p>
                         {{ end }}
-                        {{ if eq .Data.Error "InternalError" }}
+                        {{ if eq .Data.Error "PasswordInternalError" }}
                         <p>Internal error. Please try again.</p>
                         {{ end }}
                     </div>
