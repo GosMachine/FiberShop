@@ -2,17 +2,17 @@
 {{ template "base" . }}
 <h1 class="text-center mt-5 font-bold  text-emerald-500 text-[3.75rem]">{{ .Data.Title }}</h1>
 <section class="flex justify-center">
-    <div class="w-full h-full py-12 text-center">
-        <h2 class="mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200">
-            Change Email
-        </h2>
+    <div class="w-full h-full pb-12 pt-6 text-center">
         <div class="g-6 px-6 flex flex-wrap h-full justify-center items-center">
-            <div  class="md:w-8/12 w-full lg:ml-6 lg:w-5/12">
+            <div  class="md:w-5/12 mx-4 mb-12 md:mb-0 w-full lg:w-3/12">
+                <h2 class="mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200">
+                    Change Email
+                </h2>
                 <form action="/account/settings/change_email" method="post" id="change_email" data-te-validation-init data-te-active-validation="true">
                     <!-- Email input -->
                     <input type="hidden" name="email" value="{{ .Email }}">
                     <div
-                            class="relative mb-6"
+                            class="relative mb-3"
                             data-te-input-wrapper-init
                             data-te-validate="input"
                             data-te-validation-ruleset="isRequired|isEmail"
@@ -30,7 +30,7 @@
                         >New Email address
                         </label>
                     </div>
-                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
+                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center">
                         {{ if eq .Data.Error "EmailInternalError" }}
                         <p>Internal error. Please try again.</p>
                         {{ end }}
@@ -49,19 +49,17 @@
                     </button>
                 </form>
             </div>
-        </div>
-        <hr
-                class="my-12 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50" />
-        <h2 class="mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200">
-            Change Password
-        </h2>
-        <div class="g-6 px-6 flex flex-wrap h-full justify-center items-center">
-            <div  class="md:w-8/12 w-full lg:ml-6 lg:w-5/12">
+            <div
+                    class="hidden md:block inline-block h-[250px] min-h-[1em] w-0.5 self-stretch bg-neutral-500 dark:bg-neutral-50 opacity-100 dark:opacity-50"></div>
+            <div  class="md:w-5/12 w-full mx-4 lg:w-3/12">
+                <h2 class="mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200">
+                    Change Password
+                </h2>
                 <form action="/account/settings/change_pass" method="post" id="change_password" data-te-validation-init data-te-active-validation="true">
                     <!-- Password input -->
                     <input type="hidden" name="email" value="{{ .Email }}">
                     <div
-                            class="relative mb-6"
+                            class="relative mb-3"
                             data-te-input-wrapper-init
                             data-te-validate="input"
                             data-te-validation-ruleset="isRequired|isLongerThan(7)"
@@ -81,7 +79,7 @@
                         >Current Password
                         </label>
                     </div>
-                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
+                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center">
                         {{ if eq .Data.Error "PasswordInvalidCredentials" }}
                         <p>Invalid password.</p>
                         {{ end }}
