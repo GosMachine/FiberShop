@@ -18,4 +18,5 @@ func accountRoutes(a *fiber.App, middle *middleware.App, handle *handlers.Handle
 	account.Post("/change_pass", handle.HandleChangePassForm)
 	account.Get("/", handle.HandleAccount)
 	account.Get("/settings", handle.HandleAccountSettings)
+	account.Post("/settings/change_pass", handle.HandleSettingsChangePass)
 }

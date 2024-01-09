@@ -8,7 +8,7 @@
         </h2>
         <div class="g-6 px-6 flex flex-wrap h-full justify-center items-center">
             <div  class="md:w-8/12 w-full lg:ml-6 lg:w-5/12">
-                <form action="/account/change_email" method="post" id="change_email" data-te-validation-init data-te-active-validation="true">
+                <form action="/account/settings/change_email" method="post" id="change_email" data-te-validation-init data-te-active-validation="true">
                     <!-- Email input -->
                     <div
                             class="relative mb-6"
@@ -29,7 +29,18 @@
                         >New Email address
                         </label>
                     </div>
-
+                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
+                        {{ if eq .Data.Error "InvalidCredentials" }}
+                        <p>Invalid email or password.</p>
+                        {{ end }}
+                        {{ if eq .Data.Error "AlreadyExists" }}
+                        <p>User already exists.</p>
+                        {{ end }}
+                        {{ if eq .Data.Error "InternalError" }}
+                        <p>Internal error. Please try again.</p>
+                        {{ end }}
+                        <p id="emailMatchMessage"></p>
+                    </div>
                     <button
 
                             type="submit"
@@ -49,8 +60,9 @@
         </h2>
         <div class="g-6 px-6 flex flex-wrap h-full justify-center items-center">
             <div  class="md:w-8/12 w-full lg:ml-6 lg:w-5/12">
-                <form action="/change_pass" method="post" id="change_password" data-te-validation-init data-te-active-validation="true">
-                    <!-- Email input -->
+                <form action="/account/settings/change_pass" method="post" id="change_password" data-te-validation-init data-te-active-validation="true">
+                    <!-- Password input -->
+                    <input type="hidden" name="email" value="{{ .Email }}">
                     <div
                             class="relative mb-6"
                             data-te-input-wrapper-init
@@ -72,18 +84,14 @@
                         >Current Password
                         </label>
                     </div>
-<!--                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">-->
-<!--                        {{ if eq .Data.Error "InvalidCredentials" }}-->
-<!--                        <p>Invalid email or password.</p>-->
-<!--                        {{ end }}-->
-<!--                        {{ if eq .Data.Error "AlreadyExists" }}-->
-<!--                        <p>User already exists.</p>-->
-<!--                        {{ end }}-->
-<!--                        {{ if eq .Data.Error "InternalError" }}-->
-<!--                        <p>Internal error. Please try again.</p>-->
-<!--                        {{ end }}-->
-<!--                        <p id="passwordMatchMessage"></p>-->
-<!--                    </div>-->
+                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
+                        {{ if eq .Data.Error "InvalidCredentials" }}
+                        <p>Invalid email or password.</p>
+                        {{ end }}
+                        {{ if eq .Data.Error "InternalError" }}
+                        <p>Internal error. Please try again.</p>
+                        {{ end }}
+                    </div>
 
                     <button
 
@@ -101,8 +109,4 @@
     </div>
 </section>
 {{ template "account/base" . }}
-<script src="/js/password.js"></script>
-<script>
-    setupPasswordMatchValidation('register', 'password', 'confirmPassword', 'passwordMatchMessage');
-</script>
 {{ template "footer" . }}

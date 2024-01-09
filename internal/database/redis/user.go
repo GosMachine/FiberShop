@@ -7,6 +7,15 @@ import (
 	"time"
 )
 
+func (r *Redis) SetUserCache(user models.User) error {
+	encode, err := utils.EncodeUserData(user)
+	if err != nil {
+		return err
+	}
+	r.Client.Set(r.Ctx, "UserData:"+user.Email, encode, time.Hour)
+	return nil
+}
+
 func (r *Redis) GetUserCache(email string) (models.User, error) {
 	userData, err := r.Client.Get(r.Ctx, "UserData:"+email).Result()
 	if err == nil && userData != "" {
@@ -21,10 +30,10 @@ func (r *Redis) GetUserCache(email string) (models.User, error) {
 			return decode, nil
 		}
 	}
-	return r.setUserCache(email)
+	return r.getUserFromDb(email)
 }
 
-func (r *Redis) setUserCache(email string) (models.User, error) {
+func (r *Redis) getUserFromDb(email string) (models.User, error) {
 	var (
 		err  error
 		user models.User
@@ -34,12 +43,9 @@ func (r *Redis) setUserCache(email string) (models.User, error) {
 		r.Log.Error("error set user cache", zap.Error(err))
 		return models.User{}, err
 	}
-	encode, err := utils.EncodeUserData(user)
-	if err != nil {
-		r.Log.Error("error encode user", zap.Error(err))
-		return models.User{}, err
+	if err := r.SetUserCache(user); err != nil {
+		r.Log.Error("error set userCache", zap.Error(err))
 	}
-	r.Client.Set(r.Ctx, "UserData:"+email, encode, time.Hour)
 	r.Log.Info("userData from postgres", zap.String("email", email))
 	return user, nil
 }

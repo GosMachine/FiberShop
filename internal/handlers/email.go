@@ -35,7 +35,7 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 		}
 		SetCookie("token", token, c, time.Now().Add(time.Hour*24))
 		return a.renderTemplate(c, "account/change_pass", fiber.Map{"Title": "Change pass", "Email": email, "Action": action})
-	case "change_password":
+	case "change_email":
 	}
 
 	return c.Redirect("/")
@@ -50,6 +50,9 @@ func (a *Handle) emailVerification(email string) {
 	err = a.Db.UpdateUser(user)
 	if err != nil {
 		a.Log.Error("error email verification", zap.Error(err))
+	}
+	if err := a.Redis.SetUserCache(user); err != nil {
+		a.Redis.Log.Error("error ser userCache", zap.Error(err))
 	}
 }
 

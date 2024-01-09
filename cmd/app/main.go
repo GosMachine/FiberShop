@@ -31,3 +31,9 @@ func main() {
 	application.FiberApp.Stop()
 	log.Info("application stopped")
 }
+
+//TODO оптимизировать(горутины, скорость и т.д)
+//TODO обрабатывать красивее ошибки на фронте
+//TODO отслеживать просмотры страницы и ip
+//TODO оптимизировать сервис аутх(кэш и т.д)
+//TODO email verification в settings
