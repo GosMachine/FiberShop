@@ -1,8 +1,8 @@
 {{ template "header" . }}
 {{ template "base" . }}
 <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
-<section class="h-screen flex justify-center items-center dark:bg-neutral-800 dark:shadow-black/10">
-    <div class="container h-full px-6 py-24 text-center">
+<section class="flex justify-center">
+    <div class="container h-full px-6 py-12 text-center">
         <div class="g-6 flex flex-wrap h-full justify-center items-center">
             <div class="mb-12 md:mb-0 md:w-8/12 lg:w-6/12">
                 <img
@@ -10,7 +10,7 @@
                         class="w-full"
                         alt="Phone image" />
             </div>
-            <div  class="md:w-8/12 sm:w-full lg:ml-6 lg:w-5/12">
+            <div  class="md:w-8/12 w-full lg:ml-6 lg:w-5/12">
 
                 <form action="/register" method="post" id="register" data-te-validation-init data-te-active-validation="true">
                     <!-- Email input -->
@@ -140,7 +140,7 @@
                     </div>
 
                     <!-- Social login buttons -->
-                    <a href="/login/google" role="button" class="font-semibold text-[0.9rem] mb-12 text-center block w-full rounded bg-[#ee1414] text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-red-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-red-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Continue with google</a>
+                    <a href="/login/google" role="button" class="font-semibold text-[0.9rem] text-center block w-full rounded bg-[#ee1414] text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-red-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-red-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Continue with google</a>
                 </form>
             </div>
         </div>
