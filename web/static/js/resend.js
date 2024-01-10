@@ -1,14 +1,13 @@
 document.getElementById('resendCodeButton').addEventListener('click', function() {
     var button = this;
     button.disabled = true;
-
-    var email = document.querySelector('#email [name="email"]').value;
-    var action = document.querySelector('#email [name="action"]').value;
+    const email = document.getElementById('email').value;
+    const formData = new FormData();
+    formData.append('email', email);
 
     fetch('/email/resend', {
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'email=' + encodeURIComponent(email) + '&action=' + encodeURIComponent(action)
+        body: formData
     })
         .then(response => {
             if (!response.ok) {

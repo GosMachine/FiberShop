@@ -14,8 +14,8 @@
                 <h3 class="mb-3 mt-5 text-2xl text-center font-medium leading-tight dark:text-neutral-200">
                     We have sent a 6-digit code to<br><strong class="text-[16px] md:text-[24px]">{{ .Data.Email }}</strong>.<br>
                 </h3>
-                <form action="/email" method="post" id="email" data-te-validation-init data-te-active-validation="true">
-                    <input type="hidden" name="email" value="{{ .Data.Email }}">
+                <form action="/email" method="post" id="emailForm" data-te-validation-init data-te-active-validation="true">
+                    <input type="hidden" name="email" id="email" value="{{ .Data.Email }}">
                     <input type="hidden" name="action" value="{{ .Data.Action }}">
                     <!-- Email input -->
                     <div

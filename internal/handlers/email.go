@@ -81,9 +81,8 @@ func (a *Handle) emailVerification(email string) {
 
 func (a *Handle) HandleEmailResend(c *fiber.Ctx) error {
 	email := c.FormValue("email")
-	action := c.FormValue("action")
 	go func(email string) {
 		a.sendEmail(email)
 	}(email)
-	return a.renderTemplate(c, "email", fiber.Map{"Title": "Email", "Email": email, "Action": action, "Timeout": true})
+	return nil
 }

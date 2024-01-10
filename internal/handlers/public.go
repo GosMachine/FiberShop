@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 )
@@ -43,7 +42,7 @@ func (a *Handle) HandleContactForm(c *fiber.Ctx) error {
 	}
 	var data contactForm
 	if err := c.BodyParser(&data); err != nil {
-		fmt.Println(err)
+		a.Log.Error("error create ticket", zap.Error(err))
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "error create ticket",
 		})
@@ -53,8 +52,5 @@ func (a *Handle) HandleContactForm(c *fiber.Ctx) error {
 			a.Log.Error("error create ticket", zap.Error(err))
 		}
 	}(data, c.IP())
-	return c.JSON(fiber.Map{
-		"status":  "success",
-		"message": "Ticket created",
-	})
+	return nil
 }
