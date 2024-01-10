@@ -19,10 +19,6 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 		return a.renderTemplate(c, "email", fiber.Map{"Error": "WrongCode", "Email": email, "Action": action})
 	}
 	switch action {
-	case "register":
-		go func(email string) {
-			a.emailVerification(email)
-		}(email)
 	case "email_verification":
 		go func(email string) {
 			a.emailVerification(email)
@@ -65,7 +61,7 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 		SetCookie("token", token, c, time.Now().Add(time.Hour*336))
 	}
 	a.Redis.Client.Del(a.Redis.Ctx, "verificationCode:"+email)
-	return c.Redirect("/")
+	return c.Redirect("/account/settings")
 }
 
 func (a *Handle) emailVerification(email string) {

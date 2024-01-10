@@ -76,7 +76,7 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		go func(data RequestData) {
 			a.sendEmail(data.Email)
 		}(data)
-		return a.renderTemplate(c, "email", fiber.Map{"Title": "Email", "Email": data.Email, "Action": "register"})
+		return a.renderTemplate(c, "email", fiber.Map{"Title": "Email", "Email": data.Email, "Action": "email_verification"})
 	}
 	return c.Redirect("/")
 }

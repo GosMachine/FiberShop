@@ -3,9 +3,28 @@
 <h1 class="text-center mt-5 font-bold  text-emerald-500 text-[3.75rem]">{{ .Data.Title }}</h1>
 <section class="flex justify-center">
     <div class="w-full h-full pb-12 pt-6 text-center">
+        {{ if not .EmailVerified }}
+        <form action="/account/email_verification" method="post">
+            <div class="items-center mb-12 flex justify-center flex-wrap">
+                <h2 class="mb-2 mt-2 text-[1.7rem] w-full text-center font-semibold leading-tight dark:text-neutral-200">
+                    Confirm your email address
+                </h2>
+                <input type="hidden" name="email" value="{{ .Email }}">
+                <button
+                        type="submit"
+                        class="block items-center lg:w-3/12 md:w-6/12 w-9/12 rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        data-te-submit-btn-ref>
+                    <span class="font-semibold">Confirm</span>
+                </button>
+            </div>
+        </form>
+        {{ end }}
         <div class="g-6 px-6 flex flex-wrap h-full justify-center items-center">
+
             <div  class="md:w-5/12 mx-4 mb-12 md:mb-0 w-full lg:w-3/12">
-                <h2 class="mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200">
+                <h2 class="mb-2 mt-2 text-[1.7rem] text-center font-semibold leading-tight dark:text-neutral-200">
                     Change Email
                 </h2>
                 <form action="/account/settings/change_email" method="post" id="change_email" data-te-validation-init data-te-active-validation="true">
@@ -52,7 +71,7 @@
             <div
                     class="hidden md:block inline-block h-[250px] min-h-[1em] w-0.5 self-stretch bg-neutral-500 dark:bg-neutral-50 opacity-100 dark:opacity-50"></div>
             <div  class="md:w-5/12 w-full mx-4 lg:w-3/12">
-                <h2 class="mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200">
+                <h2 class="mb-2 mt-2 text-[1.7rem] text-center font-semibold leading-tight dark:text-neutral-200">
                     Change Password
                 </h2>
                 <form action="/account/settings/change_pass" method="post" id="change_password" data-te-validation-init data-te-active-validation="true">

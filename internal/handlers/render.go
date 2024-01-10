@@ -23,12 +23,14 @@ func (a *Handle) renderTemplate(c *fiber.Ctx, tmpl string, data fiber.Map) error
 	}
 	FinalData := struct {
 		IsAuthenticated bool
+		EmailVerified   bool
 		Balance         float64
 		Email           string
 		//Viewers        string
 		Data interface{}
 	}{
 		IsAuthenticated: isAuthenticated,
+		EmailVerified:   user.EmailVerified,
 		Balance:         user.Balance,
 		Email:           email,
 		//Viewers:        viewersCount,

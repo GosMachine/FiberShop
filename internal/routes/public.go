@@ -20,6 +20,8 @@ func authRoutes(a *fiber.App, handle *handlers.Handle) {
 	a.Post("/login", handle.HandleLoginForm)
 	a.Get("/register", handle.HandleRegister)
 	a.Post("/register", handle.HandleRegisterForm)
+	a.Get("/contact", handle.HandleContact)
+	a.Post("/contact", handle.HandleContactForm)
 	a.Get("/login/:provider", goth_fiber.BeginAuthHandler)
 	a.Get("/auth/callback/:provider", handle.HandleAuthCallback)
 }

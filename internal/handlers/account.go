@@ -15,6 +15,14 @@ func (a *Handle) HandleAccountSettings(c *fiber.Ctx) error {
 	return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings"})
 }
 
+func (a *Handle) HandleAccountVerification(c *fiber.Ctx) error {
+	email := c.FormValue("email")
+	go func(email string) {
+		a.sendEmail(email)
+	}(email)
+	return a.renderTemplate(c, "email", fiber.Map{"Title": "Email", "Email": email, "Action": "email_verification"})
+}
+
 func (a *Handle) HandleSettingsChangeEmail(c *fiber.Ctx) error {
 	email := c.FormValue("email")
 	newEmail := c.FormValue("newEmail")
