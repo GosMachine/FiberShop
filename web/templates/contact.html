@@ -56,6 +56,7 @@
                     <button
                             id="submit"
                             type="submit"
+                            name="submit"
                             class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0"
                             data-te-ripple-init
                             data-te-ripple-color="light"
@@ -67,5 +68,8 @@
         </div>
     </div>
 </section>
-{{ template "alert" . }}
+{{ template "success_alert" . }}
+<script src="/js/fetch.js"></script>
+<script src="/js/contact.js"></script>
+<script src="/js/script.js"></script>
 {{ template "footer" . }}

@@ -44,7 +44,7 @@ func (a *Handle) HandleContactForm(c *fiber.Ctx) error {
 	if err := c.BodyParser(&data); err != nil {
 		a.Log.Error("error create ticket", zap.Error(err))
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "error create ticket",
+			"error": "Error create ticket.",
 		})
 	}
 	go func(data contactForm, ip string) {
@@ -52,5 +52,7 @@ func (a *Handle) HandleContactForm(c *fiber.Ctx) error {
 			a.Log.Error("error create ticket", zap.Error(err))
 		}
 	}(data, c.IP())
-	return nil
+	return c.JSON(fiber.Map{
+		"message": "Ticket successfully created.",
+	})
 }

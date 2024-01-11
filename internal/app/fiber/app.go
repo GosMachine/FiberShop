@@ -29,9 +29,10 @@ func New(log *zap.Logger, authClient *auth.Client, db *postgres.Storage, redis *
 		google.New(os.Getenv("googleClientKey"), os.Getenv("googleClientSecret"), "http://localhost:3000/auth/callback/google"),
 	)
 	handle := handlers.New(log, authClient, db, redis)
-	app.Use(middle.Logger, cors.New())
-	routes.SetupRoutes(app, handle, middle)
+	app.Use(cors.New())
 	app.Static("/", "./web/static")
+	app.Use(middle.Logger)
+	routes.SetupRoutes(app, handle, middle)
 	app.Use(handle.HandleNotFound)
 	return &App{app: app, log: log}
 }
