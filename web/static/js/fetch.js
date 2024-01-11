@@ -1,17 +1,27 @@
-function sendRequest(form, data, btn, title, handler, finallyHandler) {
-    fetch(form.action, {
-        method: form.method,
+function sendRequest(data, endpoint, btn, title, handler, finallyHandler) {
+    fetch(endpoint, {
+        method: "POST",
         body: data
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || 'Ошибка при выполнении запроса');
+                });
             }
-            return response.json();
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                const contentType = response.headers.get("content-type");
+                return contentType.includes("application/json") ? response.json() : response.text();
+            }
+
         })
         .then(data => {
-            handler('success', title, data.message);
-            finallyHandler("success", btn)
+            if (data) {
+                handler('success', title, data.message);
+                finallyHandler("success", btn)
+            }
         })
         .catch(error => {
             handler("error", title, error.message);

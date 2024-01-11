@@ -13,10 +13,10 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 	action := c.FormValue("action")
 	code, err := a.Redis.Client.Get(a.Redis.Ctx, "verificationCode:"+email).Result()
 	if err != nil {
-		return a.renderTemplate(c, "email", fiber.Map{"Error": "CodeTimeError", "Email": email, "Action": action})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "CodeTimeError"})
 	}
 	if postCode != code {
-		return a.renderTemplate(c, "email", fiber.Map{"Error": "WrongCode", "Email": email, "Action": action})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "WrongCode"})
 	}
 	switch action {
 	case "email_verification":
@@ -27,7 +27,7 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 		token, err := utils.NewToken(email, "", time.Hour*24)
 		if err != nil {
 			a.Log.Error("error create newToken", zap.Error(err))
-			return a.renderTemplate(c, "email", fiber.Map{"Error": "InternalError", "Email": email, "Action": action})
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
 		}
 		SetCookie("token", token, c, time.Now().Add(time.Hour*24))
 		return a.renderTemplate(c, "account/change_pass", fiber.Map{"Title": "Change pass", "Email": email, "Action": action})
@@ -35,18 +35,18 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 		newEmail, err := a.Redis.Client.Get(a.Redis.Ctx, "change_email:"+email).Result()
 		if err != nil {
 			a.Log.Error("error get newEmail", zap.Error(err))
-			return a.renderTemplate(c, "email", fiber.Map{"Error": "InternalError", "Email": email, "Action": action})
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
 		}
 		user, err := a.Redis.GetUserCache(email)
 		if err != nil {
 			a.Log.Error("error getting user cache", zap.Error(err))
-			return a.renderTemplate(c, "email", fiber.Map{"Error": "InternalError", "Email": email, "Action": action})
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
 		}
 		user.Email = newEmail
 		err = a.Db.UpdateUser(user)
 		if err != nil {
 			a.Log.Error("error change email", zap.Error(err))
-			return a.renderTemplate(c, "email", fiber.Map{"Error": "InternalError", "Email": email, "Action": action})
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
 		}
 
 		if err := a.Redis.SetUserCache(user); err != nil {
@@ -56,7 +56,7 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 		token, err := utils.NewToken(newEmail, "on", time.Hour*336)
 		if err != nil {
 			a.Log.Error("error create newToken", zap.Error(err))
-			return a.renderTemplate(c, "email", fiber.Map{"Error": "InternalError", "Email": email, "Action": action})
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
 		}
 		SetCookie("token", token, c, time.Now().Add(time.Hour*336))
 	}
@@ -84,5 +84,5 @@ func (a *Handle) HandleEmailResend(c *fiber.Ctx) error {
 	go func(email string) {
 		a.sendEmail(email)
 	}(email)
-	return nil
+	return c.JSON(fiber.Map{"message": "Code sent successfully."})
 }

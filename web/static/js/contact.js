@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const contactForm = document.getElementById('contact');
-    initializeForm(contactForm, "Contact");
+    var submitButton = document.getElementById('submit');
+    submitButton.addEventListener('click', function() {
+        submitButton.disabled = true;
+        const contactForm = document.getElementById('contactForm');
+        const formData = new FormData(contactForm);
+        sendRequest(formData, "/contact", submitButton, "Contact", showAlert, hideAlert)
+    });
 });

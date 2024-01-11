@@ -1,6 +1,6 @@
 {{ template "header" . }}
 {{ template "base" . }}
-<section class="flex justify-center">
+<section id="templateContent" class="flex justify-center">
     <div class="h-full px-6 py-12 text-center">
         <div class="g-12 flex h-full items-center justify-center">
 
@@ -23,8 +23,7 @@
                             data-te-input-wrapper-init
                             data-te-validate="input"
                             data-te-validation-ruleset="isRequired|isNumber|isLongerThan(5)|isShorterThan(7)"
-                            data-te-invalid-feedback="The code is invalid"
-                            data-te-valid-feedback="The code is valid">
+                            data-te-invalid-feedback="The code is invalid">
                         <input
                                 type="text"
                                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
@@ -38,24 +37,12 @@
                         >Code
                         </label>
                     </div>
-                    <div class="mb-6 flex items-center justify-between">
-                        <button type="button" id="resendCodeButton" class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700">Resend code</button>
+                    <div class=" flex items-center justify-between">
+                        <button type="button" id="resendBtn" class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700">Resend code</button>
                     </div>
-                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
-                        {{ if eq .Data.Error "WrongCode" }}
-                        <p>Incorrect code.</p>
-                        {{ end }}
-                        {{ if eq .Data.Error "CodeTimeError" }}
-                        <p>Confirmation code has expired. Please request a new one</p>
-                        {{ end }}
-                        {{ if eq .Data.Error "InternalError" }}
-                        <p>Internal error. Please try again.</p>
-                        {{ end }}
-                    </div>
-
                     <!-- Submit button -->
                     <button
-
+                            id="submitBtn"
                             type="submit"
                             class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0"
                             data-te-ripple-init
@@ -76,9 +63,13 @@
                     <a href="/" role="button" class="font-semibold text-[0.9rem] text-center block w-full rounded bg-[#ee1414] text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-red-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-red-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Remind me later</a>
                     {{ end }}
                 </form>
+                <div id="emailError" class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center">
+                </div>
             </div>
         </div>
     </div>
 </section>
-<script src="/js/resend.js"></script>
+{{ template "success_alert" . }}
+<script src="/js/fetch.js"></script>
+<script src="/js/email.js"></script>
 {{ template "footer" . }}
