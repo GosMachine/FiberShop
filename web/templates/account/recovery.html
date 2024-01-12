@@ -1,21 +1,17 @@
 {{ template "header" . }}
 {{ template "base" . }}
 <section class="flex justify-center">
-  <div class=" h-full px-6 py-12 text-center">
+  <div class="h-full px-6 py-12 text-center">
     <div class="g-12 flex h-full items-center justify-center">
       <div  class="md:w-8/12">
         <h2 class="mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200">
           Getting back into your GosBoost account
         </h2>
-        <form action="/account_recovery" method="post" id="recovery" data-te-validation-init data-te-active-validation="true">
+        <form action="/account_recovery" method="post" id="recoveryForm">
           <!-- Email input -->
           <div
                   class="relative mb-6"
-                  data-te-input-wrapper-init
-                  data-te-validate="input"
-                  data-te-validation-ruleset="isRequired|isEmail"
-                  data-te-invalid-feedback="The email address is invalid"
-                  data-te-valid-feedback="The email address is valid">
+                  data-te-input-wrapper-init>
             <input
                     type="email"
                     class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
@@ -28,17 +24,12 @@
             >Email address
             </label>
           </div>
-          <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
-            {{ if eq .Data.Error "UserIsNotFound" }}
-            <p>User is not found.</p>
-            {{ end }}
+          <div id="recoveryError" class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
           </div>
           <button
+                  id="submitBtn"
                   type="submit"
-                  class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0"
-                  data-te-ripple-init
-                  data-te-ripple-color="light"
-                  data-te-submit-btn-ref>
+                  class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">
             <span class="font-semibold">Continue</span>
           </button>
         </form>
@@ -46,4 +37,6 @@
     </div>
   </div>
 </section>
+<script src="/js/fetch.js"></script>
+<script src="/js/recovery.js"></script>
 {{ template "footer" . }}

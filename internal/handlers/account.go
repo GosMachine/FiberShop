@@ -58,10 +58,12 @@ func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {
 	passHash, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.MinCost)
 	if err != nil {
 		a.Log.Error("failed to generate password hash", zap.Error(err))
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
 	}
 	user, err := a.Redis.GetUserCache(email)
 	if err != nil {
 		a.Log.Error("failed to get user cache", zap.Error(err))
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
 	}
 	user.PassHash = passHash
 	user.LastLoginIp = c.IP()
@@ -69,6 +71,7 @@ func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {
 	err = a.Db.UpdateUser(user)
 	if err != nil {
 		a.Log.Error("failed to update user", zap.Error(err))
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
 	}
 	if err := a.Redis.SetUserCache(user); err != nil {
 		a.Log.Error("error set userCache", zap.Error(err))

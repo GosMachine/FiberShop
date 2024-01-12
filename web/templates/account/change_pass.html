@@ -10,7 +10,7 @@
                     Enter a new password
                 </h2>
 
-                <form action="/account/change_pass" method="post" id="change_pass">
+                <form action="/account/change_pass" method="post" id="changePassForm">
                     <input type="hidden" name="email" value="{{ .Data.Email }}">
                     <input type="hidden" name="action" value="{{ .Data.Action }}">
                     <div
@@ -47,14 +47,9 @@
                         >Confirm password
                         </label>
                     </div>
-                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
-                        {{ if eq .Data.Error "Invalid password" }}
-                        <p>Invalid password.</p>
-                        {{ end }}
-                        <p id="passwordMatchMessage"></p>
-                    </div>
+                    <div id="changePassError" class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3"></div>
                     <button
-
+                            id="submitBtn"
                             type="submit"
                             class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">
                         <span class="font-semibold">Continue</span>
@@ -65,7 +60,6 @@
     </div>
 </section>
 <script src="/js/password.js"></script>
-<script>
-    setupPasswordMatchValidation('change_pass', 'password', 'confirmPassword', 'passwordMatchMessage');
-</script>
+<script src="/js/fetch.js"></script>
+<script src="/js/change_pass.js"></script>
 {{ template "footer" . }}

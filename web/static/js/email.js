@@ -1,12 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('emailForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        var submitButton = document.getElementById('submitBtn');
-        submitButton.disabled = true;
-        const emailForm = document.getElementById('emailForm');
-        const formData = new FormData(emailForm);
-        sendRequest(formData, "/email", submitButton, "Email", emailHandle, emailFinallyHandle)
-    });
+    initForm("emailForm", "submitBtn", "Email", "/email", emailHandle, emailFinallyHandle)
     var resendButton = document.getElementById('resendBtn');
     resendButton.addEventListener('click', function() {
         resendButton.disabled = true;

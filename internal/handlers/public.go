@@ -18,7 +18,7 @@ func (a *Handle) HandleAccountRecoveryForm(c *fiber.Ctx) error {
 	_, err := a.Db.User(email)
 	if err != nil {
 		a.Log.Error("account_recovery error", zap.Error(err))
-		return a.renderTemplate(c, "account/recovery", fiber.Map{"Title": "Account recovery", "Error": "UserIsNotFound"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "UserIsNotFound"})
 	}
 	go func(email string) {
 		a.sendEmail(email)
@@ -43,9 +43,7 @@ func (a *Handle) HandleContactForm(c *fiber.Ctx) error {
 	var data contactForm
 	if err := c.BodyParser(&data); err != nil {
 		a.Log.Error("error create ticket", zap.Error(err))
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Error create ticket.",
-		})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Error create ticket."})
 	}
 	go func(data contactForm, ip string) {
 		if err := a.Db.CreateTicket(data.Name, data.Email, data.Message, ip); err != nil {

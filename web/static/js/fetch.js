@@ -28,3 +28,14 @@ function sendRequest(data, endpoint, btn, title, handler, finallyHandler) {
             finallyHandler("error", btn)
         })
 }
+
+function initForm(formId, btnId, title, endpoint, handler, finallyHandler) {
+    document.getElementById(formId).addEventListener('submit', function(event) {
+        event.preventDefault();
+        var submitButton = document.getElementById(btnId);
+        submitButton.disabled = true;
+        const form = document.getElementById(formId);
+        const formData = new FormData(form);
+        sendRequest(formData, endpoint, submitButton, title, handler, finallyHandler)
+    })
+}
