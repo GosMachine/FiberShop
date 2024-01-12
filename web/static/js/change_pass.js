@@ -1,10 +1,14 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.getElementById('changePassForm').addEventListener('submit', function(event) {
+    event.preventDefault();
     const validPassword = setupPasswordMatchValidation('password', 'confirmPassword', 'changePassError');
     if (validPassword) {
-        initForm("changePassForm", "submitBtn", "Change pass", "/account/change_pass", changePassHandle, changePassFinallyHandle)
+        var submitButton = document.getElementById("submitBtn");
+        submitButton.disabled = true;
+        const form = document.getElementById("changePassForm");
+        const formData = new FormData(form);
+        sendRequest(formData, "/account/change_pass", submitButton, "Change pass", changePassHandle, changePassFinallyHandle)
     }
 });
-
 
 function changePassHandle(type, title, data) {
     if (type === "error") {
