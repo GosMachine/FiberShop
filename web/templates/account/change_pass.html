@@ -10,16 +10,12 @@
                     Enter a new password
                 </h2>
 
-                <form action="/account/change_pass" method="post" id="change_pass" data-te-validation-init data-te-active-validation="true">
+                <form action="/account/change_pass" method="post" id="change_pass">
                     <input type="hidden" name="email" value="{{ .Data.Email }}">
                     <input type="hidden" name="action" value="{{ .Data.Action }}">
                     <div
                             class="relative mb-6"
-                            data-te-input-wrapper-init
-                            data-te-validate="input"
-                            data-te-validation-ruleset="isRequired|isLongerThan(7)"
-                            data-te-invalid-feedback="The password is invalid!"
-                            data-te-valid-feedback="The password is valid!">
+                            data-te-input-wrapper-init>
                         <input
                                 required
                                 type="password"
@@ -36,11 +32,7 @@
                     </div>
                     <div
                             class="relative mb-6"
-                            data-te-input-wrapper-init
-                            data-te-validate="input"
-                            data-te-validation-ruleset="isRequired|isLongerThan(7)"
-                            data-te-invalid-feedback="The password is invalid!"
-                            data-te-valid-feedback="The password is valid!">
+                            data-te-input-wrapper-init>
                         <input
                                 required
                                 type="password"
@@ -64,10 +56,7 @@
                     <button
 
                             type="submit"
-                            class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0"
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
-                            data-te-submit-btn-ref>
+                            class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">
                         <span class="font-semibold">Continue</span>
                     </button>
                 </form>

@@ -19,7 +19,7 @@ function sendRequest(data, endpoint, btn, title, handler, finallyHandler) {
         })
         .then(data => {
             if (data) {
-                handler('success', title, data.message);
+                handler('success', title, data);
                 finallyHandler("success", btn)
             }
         })

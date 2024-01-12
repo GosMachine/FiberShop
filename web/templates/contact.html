@@ -13,7 +13,7 @@
                 <h3 class="mb-3 mt-5 text-2xl text-center font-medium leading-tight dark:text-neutral-200">
                     We are here to help, if you have questions, reach out and we will respond within 24 hours.
                 </h3>
-                <form action="/contact" method="post" id="contactForm" data-te-validation-init data-te-active-validation="true">
+                <form action="/contact" method="post" id="contactForm">
                     <div class="relative mb-6" data-te-input-wrapper-init>
                         <input
                                 type="text"
@@ -30,11 +30,7 @@
                     <!-- Email input -->
                     <div
                             class="relative mb-6"
-                            data-te-input-wrapper-init
-                            data-te-validate="input"
-                            data-te-validation-ruleset="isRequired|isEmail"
-                            data-te-invalid-feedback="The email address is invalid"
-                            data-te-valid-feedback="The email address is valid">
+                            data-te-input-wrapper-init>
                         <input
                                 type="email"
                                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
@@ -62,13 +58,10 @@
                         >Message</label>
                     </div>
                     <button
-                            id="submit"
+                            id="submitBtn"
                             type="submit"
                             name="submit"
-                            class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0"
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
-                            data-te-submit-btn-ref>
+                            class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">
                         <span class="font-semibold">Create ticket</span>
                     </button>
                 </form>

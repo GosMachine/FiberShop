@@ -7,7 +7,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"strings"
 	"time"
 )
 
@@ -58,14 +57,14 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		if st, ok := status.FromError(err); ok {
 			if st.Code() == codes.InvalidArgument {
 				a.Log.Error(action+" error", zap.Error(err))
-				return a.renderTemplate(c, "account/"+action, fiber.Map{"Title": strings.Title(action), "Error": "InvalidCredentials"})
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "InvalidCredentials"})
 			} else if st.Code() == codes.AlreadyExists {
 				a.Log.Error(action+" error", zap.Error(err))
-				return a.renderTemplate(c, "account/register", fiber.Map{"Title": "Register", "Error": "AlreadyExists"})
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "AlreadyExists"})
 			}
 		}
 		a.Log.Error("login error", zap.Error(err))
-		return a.renderTemplate(c, "account/"+action, fiber.Map{"Title": strings.Title(action), "Error": "InternalError"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "InternalError"})
 	}
 	expires := time.Now().Add(time.Hour * 24)
 	if data.Remember == "on" {
@@ -81,7 +80,7 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 	return c.Redirect("/")
 }
 
-func (a *Handle) HandleAuthCallback(ctx *fiber.Ctx) error {
+func (a *Handle) HandleOAuthCallback(ctx *fiber.Ctx) error {
 	user, err := goth_fiber.CompleteUserAuth(ctx)
 	if err != nil {
 		return err
@@ -89,7 +88,7 @@ func (a *Handle) HandleAuthCallback(ctx *fiber.Ctx) error {
 	token, err := a.Client.Login(context.Background(), user.Email, "", ctx.IP(), "on", "OAuth")
 	if err != nil {
 		a.Log.Error("login error", zap.Error(err))
-		return a.renderTemplate(ctx, "account/login", fiber.Map{"Title": "Log In", "Error": "InternalError"})
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
 	}
 	expires := time.Now().Add(time.Hour * 336)
 

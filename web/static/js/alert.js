@@ -12,7 +12,7 @@ function hideAlert(type, btn) {
     }, 5000);
 }
 
-function showAlert(type, title, message) {
+function showAlert(type, title, data) {
     var alertName, alertContainer, alertMessage
     if (type === "error") {
         alertContainer = document.getElementById('alert-error-container');
@@ -24,7 +24,7 @@ function showAlert(type, title, message) {
         alertMessage = document.getElementById('alert-success-message');
     }
     alertName.innerText = title;
-    alertMessage.innerText = message;
+    alertMessage.innerText = data.message;
     alertContainer.removeAttribute('data-te-toast-hide');
     alertContainer.setAttribute('data-te-toast-show', '');
 }

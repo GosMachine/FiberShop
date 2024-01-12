@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('email').value;
         const formData = new FormData();
         formData.append('email', email);
-        sendRequest(formData, "/email/resend", resendButton, "Resend code", emailHandle, emailFinallyHandle)
+        sendRequest(formData, "/email/resend", resendButton, "Resend code", showAlert, hideAlert)
     });
 });
 

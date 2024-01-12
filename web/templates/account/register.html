@@ -11,15 +11,11 @@
             </div>
             <div  class="md:w-10/12 w-full lg:ml-6 lg:w-5/12">
 
-                <form action="/register" method="post" id="register" data-te-validation-init data-te-active-validation="true">
+                <form action="/register" method="post" id="registerForm">
                     <!-- Email input -->
                     <div
                             class="relative mb-6"
-                            data-te-input-wrapper-init
-                            data-te-validate="input"
-                            data-te-validation-ruleset="isRequired|isEmail"
-                            data-te-invalid-feedback="The email address is invalid"
-                            data-te-valid-feedback="The email address is valid">
+                            data-te-input-wrapper-init>
                         <input
                                 type="email"
                                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
@@ -36,17 +32,14 @@
                     <!-- Password input -->
                     <div
                             class="relative mb-6"
-                            data-te-input-wrapper-init
-                            data-te-validate="input"
-                            data-te-validation-ruleset="isRequired|isLongerThan(7)"
-                            data-te-invalid-feedback="The password is invalid!"
-                            data-te-valid-feedback="The password is valid!">
+                            data-te-input-wrapper-init>
                         <input
                                 required
                                 type="password"
                                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                                 id="password"
                                 pattern="^[A-Za-z\d@$!%*?&]{8,}$"
+                                minlength="8"
                                 name="password"
                                 placeholder="Password" />
                         <label
@@ -57,17 +50,14 @@
                     </div>
                     <div
                             class="relative mb-6"
-                            data-te-input-wrapper-init
-                            data-te-validate="input"
-                            data-te-validation-ruleset="isRequired|isLongerThan(7)"
-                            data-te-invalid-feedback="The password is invalid!"
-                            data-te-valid-feedback="The password is valid!">
+                            data-te-input-wrapper-init>
                         <input
                                 required
                                 type="password"
                                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                                 id="confirmPassword"
                                 pattern="^[A-Za-z\d@$!%*?&]{8,}$"
+                                minlength="8"
                                 name="confirmPassword"
                                 placeholder="Password" />
                         <label
@@ -104,28 +94,15 @@
 
                     </div>
 
-                    <div class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center mb-3">
-                        {{ if eq .Data.Error "InvalidCredentials" }}
-                        <p>Invalid email or password.</p>
-                        {{ end }}
-                        {{ if eq .Data.Error "AlreadyExists" }}
-                        <p>User already exists.</p>
-                        {{ end }}
-                        {{ if eq .Data.Error "InternalError" }}
-                        <p>Internal error. Please try again.</p>
-                        {{ end }}
-                        <p id="passwordMatchMessage"></p>
+                    <div id="authError" class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center">
                     </div>
 
 
                     <!-- Submit button -->
                     <button
-
+                            id="submitBtn"
                             type="submit"
-                            class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0"
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
-                            data-te-submit-btn-ref>
+                            class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">
                         <span class="font-semibold">Sign Up</span>
                     </button>
 
@@ -146,7 +123,6 @@
     </div>
 </section>
 <script src="/js/password.js"></script>
-<script>
-    setupPasswordMatchValidation('register', 'password', 'confirmPassword', 'passwordMatchMessage');
-</script>
+<script src="/js/fetch.js"></script>
+<script src="/js/auth.js"></script>
 {{ template "footer" . }}

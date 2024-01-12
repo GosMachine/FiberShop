@@ -1,18 +1,14 @@
-function setupPasswordMatchValidation(formId, passwordFieldId, confirmPasswordFieldId, messageElementId) {
-    var form = document.getElementById(formId);
+function setupPasswordMatchValidation(passwordFieldId, confirmPasswordFieldId, messageElementId) {
     var passwordField = document.getElementById(passwordFieldId);
     var confirmPasswordField = document.getElementById(confirmPasswordFieldId);
     var messageElement = document.getElementById(messageElementId);
-
-    form.addEventListener('submit', function(event) {
-        var password = passwordField.value;
-        var confirmPassword = confirmPasswordField.value;
-
-        if (password !== confirmPassword) {
-            event.preventDefault();
-            messageElement.innerText = 'Password mismatch.';
-        } else {
-            messageElement.innerText = '';
-        }
-    });
+    var password = passwordField.value;
+    var confirmPassword = confirmPasswordField.value;
+    if (password !== confirmPassword) {
+        messageElement.innerText = 'Password mismatch.';
+        return false
+    } else {
+        messageElement.innerText = '';
+        return true
+    }
 }
