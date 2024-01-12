@@ -52,7 +52,7 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 		if err := a.Redis.SetUserCache(user); err != nil {
 			a.Redis.Log.Error("error set userCache", zap.Error(err))
 		}
-		a.Redis.Client.Del(a.Redis.Ctx, "change_email:"+email)
+		a.Redis.Client.Del(a.Redis.Ctx, "change_email:"+email, "UserData:"+email)
 		token, err := utils.NewToken(newEmail, "on", time.Hour*336)
 		if err != nil {
 			a.Log.Error("error create newToken", zap.Error(err))
