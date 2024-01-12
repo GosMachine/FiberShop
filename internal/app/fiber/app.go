@@ -37,8 +37,8 @@ func New(log *zap.Logger, authClient *auth.Client, db *postgres.Storage, redis *
 	return &App{app: app, log: log}
 }
 
-func (a *App) Run(adress string) {
-	err := a.app.Listen(adress)
+func (a *App) Run(address string) {
+	err := a.app.Listen(address)
 	if err != nil {
 		panic(err)
 	}
