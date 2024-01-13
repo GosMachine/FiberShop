@@ -37,18 +37,11 @@ func (a *Handle) HandleSettingsChangeEmail(c *fiber.Ctx) error {
 }
 
 func (a *Handle) HandleSettingsChangePass(c *fiber.Ctx) error {
-	pass := c.FormValue("password")
 	email := c.FormValue("email")
-	user, err := a.Redis.GetUserCache(email)
-	if err != nil {
-		a.Log.Error("error getting user", zap.Error(err))
-		return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings", "Error": "PasswordInternalError"})
-	}
-	if err := bcrypt.CompareHashAndPassword(user.PassHash, []byte(pass)); err != nil {
-		a.Log.Error("password wrong", zap.Error(err))
-		return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings", "Error": "PasswordInvalidCredentials"})
-	}
-	return a.renderTemplate(c, "account/change_pass", fiber.Map{"Title": "Change pass", "Email": email, "Action": "change_pass"})
+	go func(email string) {
+		a.sendEmail(email)
+	}(email)
+	return a.renderTemplate(c, "email", fiber.Map{"Title": "Email", "Email": email, "Action": "change_pass"})
 }
 
 func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {

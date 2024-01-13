@@ -31,6 +31,8 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 		}
 		SetCookie("token", token, c, time.Now().Add(time.Hour*24))
 		return a.renderTemplate(c, "account/change_pass", fiber.Map{"Title": "Change pass", "Email": email, "Action": action})
+	case "change_pass":
+		return a.renderTemplate(c, "account/change_pass", fiber.Map{"Title": "Change pass", "Email": email, "Action": action})
 	case "change_email":
 		newEmail, err := a.Redis.Client.Get(a.Redis.Ctx, "change_email:"+email).Result()
 		if err != nil {
