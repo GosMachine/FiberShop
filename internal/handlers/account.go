@@ -15,6 +15,10 @@ func (a *Handle) HandleAccountSettings(c *fiber.Ctx) error {
 	return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings"})
 }
 
+func (a *Handle) HandleAccountCart(c *fiber.Ctx) error {
+	return a.renderTemplate(c, "account/cart", fiber.Map{"Title": "Your Cart"})
+}
+
 func (a *Handle) HandleAccountVerification(c *fiber.Ctx) error {
 	email := c.FormValue("email")
 	go func(email string) {
