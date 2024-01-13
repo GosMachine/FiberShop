@@ -8,8 +8,6 @@ import (
 )
 
 func (a *Handle) renderTemplate(c *fiber.Ctx, tmpl string, data fiber.Map) error {
-	//url := c.OriginalURL()
-	//ip := c.IP()
 	var isAuthenticated bool
 	email, _ := utils.IsTokenValid(c.Cookies("token"))
 	var user models.User
@@ -21,20 +19,26 @@ func (a *Handle) renderTemplate(c *fiber.Ctx, tmpl string, data fiber.Map) error
 			a.Log.Error("error getting user", zap.Error(err))
 		}
 	}
+
+	url := c.OriginalURL()
+	ip := c.IP()
+	a.Redis.IncrementViewCounter(url, ip+":"+url)
+	viewers := a.Redis.Client.Get(a.Redis.Ctx, "viewers:"+url).Val()
+
 	FinalData := struct {
 		IsAuthenticated bool
 		EmailVerified   bool
 		Balance         float64
 		Email           string
-		//Viewers        string
-		Data interface{}
+		Viewers         string
+		Data            interface{}
 	}{
 		IsAuthenticated: isAuthenticated,
 		EmailVerified:   user.EmailVerified,
 		Balance:         user.Balance,
 		Email:           email,
-		//Viewers:        viewersCount,
-		Data: data,
+		Viewers:         viewers,
+		Data:            data,
 	}
 	return c.Render(tmpl, FinalData)
 }
