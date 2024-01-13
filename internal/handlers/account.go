@@ -27,7 +27,7 @@ func (a *Handle) HandleSettingsChangeEmail(c *fiber.Ctx) error {
 	email := c.FormValue("email")
 	newEmail := c.FormValue("newEmail")
 	if _, err := a.Db.User(newEmail); err == nil {
-		return a.renderTemplate(c, "account/settings", fiber.Map{"Title": "Settings", "Error": "EmailAlreadyUsed"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "EmailAlreadyUsed"})
 	}
 	go func(email string) {
 		a.Redis.Client.Set(a.Redis.Ctx, "change_email:"+email, newEmail, time.Minute*30)

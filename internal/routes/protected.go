@@ -14,7 +14,7 @@ func setupProtectedRoutes(a *fiber.App, middle *middleware.App, handle *handlers
 func accountRoutes(a *fiber.App, middle *middleware.App, handle *handlers.Handle) {
 	account := a.Group("/account")
 	account.Use(middle.IsAuthenticated)
-	account.Get("/logout", handlers.HandleLogout)
+	account.Post("/logout", handlers.HandleLogout)
 	account.Post("/change_pass", handle.HandleChangePassForm)
 	account.Get("/", handle.HandleAccount)
 	account.Get("/settings", handle.HandleAccountSettings)
