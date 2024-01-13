@@ -5,5 +5,21 @@
   <title>{{ .Data.Title }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/styles/output.css">
+  <script>
+    try {
+      if (
+              localStorage.theme === "dark" ||
+              (!("theme" in localStorage) &&
+                      window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+        document
+                .querySelector('meta[name="theme-color"]')
+                .setAttribute("content", "#0B1120");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    } catch (_) {}
+  </script>
 </head>
 <body class=" dark:bg-neutral-800 dark:shadow-black/10">

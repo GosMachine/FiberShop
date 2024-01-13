@@ -3320,11 +3320,6 @@ input[type="range"]:active::-webkit-slider-thumb {
   color: rgb(40 81 146 / var(--tw-text-opacity));
 }
 
-.text-red-700 {
-  --tw-text-opacity: 1;
-  color: rgb(185 28 28 / var(--tw-text-opacity));
-}
-
 .text-secondary {
   --tw-text-opacity: 1;
   color: rgb(159 166 178 / var(--tw-text-opacity));
@@ -4666,10 +4661,6 @@ input[type="range"]:active::-webkit-slider-thumb {
 
 .group\/ps.ps--scrolling-y .group-\[\&\.ps--scrolling-y\]\/ps\:opacity-60 {
   opacity: 0.6;
-}
-
-.peer:invalid ~ .peer-invalid\:visible {
-  visibility: visible;
 }
 
 .peer:focus ~ .peer-focus\:-translate-y-\[0\.75rem\] {

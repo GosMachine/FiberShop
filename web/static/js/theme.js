@@ -3,11 +3,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const themeIcon = document.getElementById("path");
 
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
         themeSwitcher.setAttribute('data-theme', "light");
         themeIcon.setAttribute('d', getPathForTheme("dark"))
     } else {
-        document.documentElement.classList.remove('dark');
         themeSwitcher.setAttribute('data-theme', "dark");
         themeIcon.setAttribute('d', getPathForTheme("light"))
     }
