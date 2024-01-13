@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"FiberShop/internal/utils"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 )
@@ -10,6 +11,10 @@ func (a *Handle) HandleHome(c *fiber.Ctx) error {
 }
 
 func (a *Handle) HandleAccountRecovery(c *fiber.Ctx) error {
+	email, _ := utils.IsTokenValid(c.Cookies("token"))
+	if email != "" {
+		return c.Redirect("/")
+	}
 	return a.renderTemplate(c, "account/recovery", fiber.Map{"Title": "Account recovery"})
 }
 

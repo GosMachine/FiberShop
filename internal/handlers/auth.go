@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"FiberShop/internal/utils"
 	"context"
 	"github.com/gofiber/fiber/v2"
 	"github.com/shareed2k/goth_fiber"
@@ -17,10 +18,18 @@ type RequestData struct {
 }
 
 func (a *Handle) HandleLogin(c *fiber.Ctx) error {
+	email, _ := utils.IsTokenValid(c.Cookies("token"))
+	if email != "" {
+		return c.Redirect("/")
+	}
 	return a.renderTemplate(c, "account/login", fiber.Map{"Title": "Log In"})
 }
 
 func (a *Handle) HandleRegister(c *fiber.Ctx) error {
+	email, _ := utils.IsTokenValid(c.Cookies("token"))
+	if email != "" {
+		return c.Redirect("/")
+	}
 	return a.renderTemplate(c, "account/register", fiber.Map{"Title": "Sign Up"})
 }
 
