@@ -12,8 +12,8 @@ type CouponType string
 const (
 	FixedAmount ValueTypeEnum = "fixed_amount"
 	Percentage  ValueTypeEnum = "percentage"
-	Gift        CouponType    = "discount"
-	Discount    CouponType    = "gift"
+	Discount    CouponType    = "discount"
+	Gift        CouponType    = "gift"
 )
 
 type Coupon struct {

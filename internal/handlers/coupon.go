@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"FiberShop/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 )
@@ -8,7 +9,7 @@ import (
 func (a *Handle) HandleDiscountCoupon(c *fiber.Ctx) error {
 	code := c.FormValue("code")
 	coupon, err := a.Db.GetCoupon(code)
-	if err != nil {
+	if err != nil || coupon.Type != models.Discount {
 		a.Log.Error("err get coupon", zap.Error(err))
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "InvalidCoupon"})
 	}
