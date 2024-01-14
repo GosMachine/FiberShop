@@ -15,41 +15,32 @@
         <div class="flex flex-wrap">
             <div class="w-full lg:w-9/12">
                 <div class="px-10">
+                    {{ range .Data.CartItems }}
                     <div
                             class="relative flex flex-wrap items-center pb-8 mb-8 -mx-4 border-b border-gray-200 dark:border-gray-700 xl:justify-between border-opacity-40">
                         <div class="w-full mb-2 lg:mb-0 h-96 md:h-44 md:w-44">
-                            <img src="https://i.postimg.cc/Z5w3QGdB/pexels-kabita-darlami-5788986.jpg" alt=""
+                            <img src="{{ .Product.ImageURL }}" alt=""
                                  class="object-cover w-full h-full">
                         </div>
                         <div class="w-full px-4 md:w-auto xl:mb-0">
                             <a class="block mb-3 text-xl font-medium dark:text-white hover:underline" href="#">
-                                Goldstar Shoes</a>
+                                {{ .Product.Name }}</a>
                             <div class="flex mb-2 flex-wrap">
                                 <p class="mr-4 text-sm font-medium">
-                                    <span class="dark:text-white">Color:</span>
-                                    <span class="ml-2 text-gray-600 dark:text-gray-300">yellow</span>
+                                    <span class="dark:text-white">{{ .Product.Description }}</span>
+<!--                                    <span class="ml-2 text-gray-600 dark:text-gray-300">yellow</span>-->
                                 </p>
-                                <p class="text-sm font-medium dark:text-white">
-                                    <span>Size:</span>
-                                    <span class="ml-2 text-gray-600 dark:text-gray-300">38</span>
-                                </p>
-                            </div>
-                            <div class="flex mb-2 flex-wrap">
-                                <p class="mr-4 text-sm font-medium">
-                                    <span class="dark:text-white">Color:</span>
-                                    <span class="ml-2 text-gray-600 dark:text-gray-300">yellow</span>
-                                </p>
-                                <p class="text-sm font-medium dark:text-white">
-                                    <span>Size:</span>
-                                    <span class="ml-2 text-gray-600 dark:text-gray-300">38</span>
-                                </p>
+<!--                                <p class="text-sm font-medium dark:text-white">-->
+<!--                                    <span>Size:</span>-->
+<!--                                    <span class="ml-2 text-gray-600 dark:text-gray-300">38</span>-->
+<!--                                </p>-->
                             </div>
                         </div>
                         <div class=" mt-6 mb-6 w-auto xl:mb-0 xl:mt-0">
                             <div class="flex items-center">
                                 <div
                                         class="inline-flex items-center px-2 font-semibold border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700 ">
-                                    <button
+                                    <button onclick="decrementQuantity({{ .ID }})"
                                             class="py-2 pr-2 border-r border-gray-300 dark:border-gray-600 dark:text-white hover:text-gray-400">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                              fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
@@ -60,8 +51,10 @@
                                     <input type="number"
                                            class="w-10 px-2 py-4 text-center border-0 rounded-md dark:bg-gray-800 bg-gray-50 dark:text-white "
                                            placeholder="1"
+                                           value="{{ .Quantity }}"
+                                           id="quantityInput_{{ .ID }}"
                                         min="1">
-                                    <button
+                                    <button onclick="incrementQuantity({{ .ID }})"
                                             class="py-2 pl-2 border-l border-gray-300 dark:border-gray-600 dark:text-white hover:text-gray-400">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                              fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
@@ -76,11 +69,12 @@
                         <div class="px-4 w-auto">
                                 <span class="text-xl font-semibold text-emerald-500 ">
                                     <span class="">$</span>
-                                    <span>544.90</span>
+                                    <span>{{ .TotalPrice }}</span>
                                 </span>
                         </div>
                         <a class="block items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0" href="#">Remove</a>
                     </div>
+                    {{ end }}
                 </div>
             </div>
             <div class="w-full lg:w-3/12">
@@ -130,5 +124,5 @@
 </section>
 {{ template "account/base" . }}
 <script src="/js/fetch.js"></script>
-<!--<script src="/js/settings.js"></script>-->
+<script src="/js/cart.js"></script>
 {{ template "footer" . }}

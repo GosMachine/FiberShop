@@ -12,8 +12,9 @@ type Cart struct {
 
 type CartItem struct {
 	gorm.Model
-	CartID    uint
-	Product   Product `gorm:"foreignKey:ProductID"`
-	ProductID int64
-	Quantity  int64
+	CartID     uint
+	Product    Product `gorm:"foreignKey:ProductID"`
+	ProductID  int64
+	Quantity   int64
+	TotalPrice float64
 }
