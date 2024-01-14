@@ -36,41 +36,28 @@
 <!--                                </p>-->
                             </div>
                         </div>
-                        <div class=" mt-6 mb-6 w-auto xl:mb-0 xl:mt-0">
+                        <div class="mt-6 mb-6 w-auto xl:mb-0 xl:mt-0">
                             <div class="flex items-center">
-                                <div
-                                        class="inline-flex items-center px-2 font-semibold border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700 ">
-                                    <button onclick="decrementQuantity({{ .ID }})"
-                                            class="py-2 pr-2 border-r border-gray-300 dark:border-gray-600 dark:text-white hover:text-gray-400">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                             fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
-                                            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z">
-                                            </path>
+                                <div class="inline-flex items-center px-2 font-semibold border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700">
+                                    <button onclick="decrementQuantity({{ .ID }})" class="py-2 pr-2 border-r border-gray-300 dark:border-gray-600 dark:text-white hover:text-gray-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path>
                                         </svg>
                                     </button>
-                                    <input type="number"
-                                           class="w-10 px-2 py-4 text-center border-0 rounded-md dark:bg-gray-800 bg-gray-50 dark:text-white "
-                                           placeholder="1"
-                                           value="{{ .Quantity }}"
-                                           id="quantityInput_{{ .ID }}"
-                                        min="1">
-                                    <button onclick="incrementQuantity({{ .ID }})"
-                                            class="py-2 pl-2 border-l border-gray-300 dark:border-gray-600 dark:text-white hover:text-gray-400">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                             fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                            <path
-                                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z">
-                                            </path>
+                                    <input type="number" class="w-10 px-2 py-4 text-center border-0 rounded-md dark:bg-gray-800 bg-gray-50 dark:text-white" placeholder="1" value="{{ .Quantity }}" id="quantityInput_{{ .ID }}" min="1" data-price="{{ .Product.Price }}" oninput="updateTotalPrice({{ .ID }})">
+                                    <button onclick="incrementQuantity({{ .ID }})" class="py-2 pl-2 border-l border-gray-300 dark:border-gray-600 dark:text-white hover:text-gray-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
                                         </svg>
                                     </button>
                                 </div>
                             </div>
                         </div>
                         <div class="px-4 w-auto">
-                                <span class="text-xl font-semibold text-emerald-500 ">
-                                    <span class="">$</span>
-                                    <span>{{ .TotalPrice }}</span>
-                                </span>
+                            <span class="text-xl font-semibold text-emerald-500">
+                                <span class="">$</span>
+                                <span id="totalPrice_{{ .ID }}">{{ .TotalPrice }}</span>
+                            </span>
                         </div>
                         <a class="block items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0" href="#">Remove</a>
                     </div>
@@ -95,15 +82,15 @@
                             <span>Subtotal</span>
                             <span class="flex dark:text-gray-400 items-center text-xl">
                                     <span class="mr-2 text-base">$</span>
-                                    <span>544,90</span>
+                                    <span id="subTotalCartPrice">{{ printf "%.2f" .Data.TotalCartPrice }}</span>
                                 </span>
                         </div>
-                        <div
+                        <div style="display: none"
                                 class="flex items-center justify-between px-5 py-4 mb-3 font-medium leading-8 bg-gray-100 bg-opacity-50 border dark:text-white dark:bg-gray-800 dark:border-gray-800 rounded-xl">
                             <span>Coupon</span>
                             <span class="flex dark:text-gray-400 items-center text-xl">
                                     <span class="mr-2 text-base">$</span>
-                                    <span>-40,90</span>
+                                    <span>-0,00</span>
                                 </span>
                         </div>
                         <div
@@ -111,7 +98,7 @@
                             <span>Total</span>
                             <span class="flex items-center text-xl text-emerald-500">
                                     <span class="mr-2 text-base">$</span>
-                                    <span>504,90</span>
+                                    <span id="totalCartPrice">{{ printf "%.2f" .Data.TotalCartPrice }} </span>
                                 </span>
                         </div>
                         <a class="block text-center mt-4 rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0" href="#">

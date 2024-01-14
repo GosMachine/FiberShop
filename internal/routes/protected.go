@@ -7,6 +7,7 @@ import (
 )
 
 func setupProtectedRoutes(a *fiber.App, middle *middleware.App, handle *handlers.Handle) {
+	a.Post("/coupon", handle.HandleCoupon)
 	accountRoutes(a, middle, handle)
 
 }

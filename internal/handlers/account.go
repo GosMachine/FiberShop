@@ -23,7 +23,12 @@ func (a *Handle) HandleAccountCart(c *fiber.Ctx) error {
 		a.Log.Error("error get user cache", zap.Error(err))
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
 	}
-	return a.renderTemplate(c, "account/cart", fiber.Map{"Title": "Your Cart", "CartItems": user.Cart.CartItems})
+	var TotalCartPrice float64
+	for _, v := range user.Cart.CartItems {
+		TotalCartPrice += v.TotalPrice
+	}
+
+	return a.renderTemplate(c, "account/cart", fiber.Map{"Title": "Your Cart", "TotalCartPrice": TotalCartPrice, "CartItems": user.Cart.CartItems})
 }
 
 func (a *Handle) HandleAccountVerification(c *fiber.Ctx) error {

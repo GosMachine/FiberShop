@@ -16,7 +16,8 @@ func New() (*Storage, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = database.AutoMigrate(models.User{}, models.Cart{}, models.Product{}, models.Category{}, models.Contact{}, models.CartItem{})
+	err = database.AutoMigrate(models.User{}, models.Cart{}, models.Product{},
+		models.Category{}, models.Contact{}, models.CartItem{}, models.Coupon{})
 	if err != nil {
 		return nil, err
 	}
