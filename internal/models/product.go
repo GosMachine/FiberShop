@@ -8,7 +8,7 @@ type Product struct {
 	Name        string `gorm:"unique"`
 	Description string
 	Price       float64
-	Stock       int
+	Stock       int64
 	CategoryID  int64
 	Category    Category
 	ImageURL    string

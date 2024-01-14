@@ -15,6 +15,8 @@ type User struct {
 	IpCreated     string
 	LastLoginIp   string
 	LastLoginDate time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+	CartID        int64
+	Cart          Cart `json:"cart" gorm:"foreignKey:CartID"`
 }
 
 func (User) Indexes() []string {
