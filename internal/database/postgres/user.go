@@ -23,3 +23,11 @@ func (s *Storage) UpdateUser(user models.User) error {
 	}
 	return nil
 }
+
+func (s *Storage) UserPreload(tableName, email string, user *models.User) error {
+	err := s.db.Preload(tableName).Where("email = ?", email).First(&user).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

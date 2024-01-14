@@ -34,15 +34,12 @@ func (r *Redis) GetUserCache(email string) (models.User, error) {
 }
 
 func (r *Redis) getUserFromDb(email string) (models.User, error) {
-	var (
-		err  error
-		user models.User
-	)
-	user, err = r.Db.User(email)
-	if err != nil {
-		r.Log.Error("error set user cache", zap.Error(err))
+	var user models.User
+	if err := r.Db.UserPreload("Cart.CartItems.Product", email, &user); err != nil {
+		r.Log.Error("error preload user", zap.Error(err))
 		return models.User{}, err
 	}
+
 	if err := r.SetUserCache(user); err != nil {
 		r.Log.Error("error set userCache", zap.Error(err))
 	}

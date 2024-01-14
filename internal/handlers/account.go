@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"FiberShop/internal/utils"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
@@ -16,7 +17,13 @@ func (a *Handle) HandleAccountSettings(c *fiber.Ctx) error {
 }
 
 func (a *Handle) HandleAccountCart(c *fiber.Ctx) error {
-	return a.renderTemplate(c, "account/cart", fiber.Map{"Title": "Your Cart"})
+	email, _ := utils.IsTokenValid(c.Cookies("token"))
+	user, err := a.Redis.GetUserCache(email)
+	if err != nil {
+		a.Log.Error("error get user cache", zap.Error(err))
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
+	}
+	return a.renderTemplate(c, "account/cart", fiber.Map{"Title": "Your Cart", "CartItems": user.Cart.CartItems})
 }
 
 func (a *Handle) HandleAccountVerification(c *fiber.Ctx) error {
