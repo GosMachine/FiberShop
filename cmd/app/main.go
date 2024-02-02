@@ -36,3 +36,4 @@ func main() {
 //TODO оптимизировать сервис аутх(кэш и т.д)
 //TODO error alert(не факт)
 //TODO добавить ссылку для восстановления пароля
+//todo add htmx, rename html to tmpl, and optimize css
