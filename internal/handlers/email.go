@@ -2,79 +2,90 @@ package handlers
 
 import (
 	"FiberShop/internal/utils"
+	"FiberShop/web/view/auth"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
-	"time"
 )
 
 func (a *Handle) HandleEmail(c *fiber.Ctx) error {
-	postCode := c.FormValue("code")
-	email := c.FormValue("email")
-	action := c.FormValue("action")
-	code, err := a.Redis.Client.Get(a.Redis.Ctx, "verificationCode:"+email).Result()
+	type emailForm struct {
+		Code   string `json:"code"`
+		Email  string `json:"email"`
+		Action string `json:"action"`
+	}
+	var data emailForm
+	if err := c.BodyParser(&data); err != nil {
+		a.Log.Error("error parse email form", zap.Error(err))
+		return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
+	}
+	code, err := a.Redis.Client.Get(a.Redis.Ctx, "verificationCode:"+data.Email).Result()
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "CodeTimeError"})
+		return c.Status(fiber.StatusBadRequest).SendString("Confirmation code has expired. Please request a new one")
 	}
-	if postCode != code {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "WrongCode"})
+	if data.Code != code {
+		return c.Status(fiber.StatusBadRequest).SendString("Incorrect code.")
 	}
-	switch action {
+	switch data.Action {
 	case "email_verification":
 		go func(email string) {
 			a.emailVerification(email)
-		}(email)
+		}(data.Email)
 	case "account_recovery":
-		token, err := utils.NewToken(email, "", time.Hour*24)
+		token, err := utils.NewToken(data.Email, "", time.Hour*24)
 		if err != nil {
 			a.Log.Error("error create newToken", zap.Error(err))
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
+			return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
 		}
 		SetCookie("token", token, c, time.Now().Add(time.Hour*24))
-		return a.renderTemplate(c, "account/change_pass", fiber.Map{"Title": "Change pass", "Email": email, "Action": action})
+		return a.renderTemplate(c, auth.ChangePass(data.Action, a.getData(c, "Change pass")))
 	case "change_pass":
-		return a.renderTemplate(c, "account/change_pass", fiber.Map{"Title": "Change pass", "Email": email, "Action": action})
+		return a.renderTemplate(c, auth.ChangePass(data.Action, a.getData(c, "Change pass")))
 	case "change_email":
-		newEmail, err := a.Redis.Client.Get(a.Redis.Ctx, "change_email:"+email).Result()
+		newEmail, err := a.Redis.Client.Get(a.Redis.Ctx, "change_email:"+data.Email).Result()
 		if err != nil {
 			a.Log.Error("error get newEmail", zap.Error(err))
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
+			return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
 		}
-		user, err := a.Redis.GetUserCache(email)
+		user, err := a.Redis.GetUserCache(data.Email)
 		if err != nil {
 			a.Log.Error("error getting user cache", zap.Error(err))
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
+			return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
 		}
 		user.Email = newEmail
 		err = a.Db.UpdateUser(user)
 		if err != nil {
 			a.Log.Error("error change email", zap.Error(err))
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
+			return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
 		}
 
 		if err := a.Redis.SetUserCache(user); err != nil {
 			a.Redis.Log.Error("error set userCache", zap.Error(err))
 		}
-		a.Redis.Client.Del(a.Redis.Ctx, "change_email:"+email, "UserData:"+email)
+		a.Redis.Client.Del(a.Redis.Ctx, "change_email:"+data.Email, "UserData:"+data.Email)
 		token, err := utils.NewToken(newEmail, "on", time.Hour*336)
 		if err != nil {
 			a.Log.Error("error create newToken", zap.Error(err))
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "InternalError"})
+			return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
 		}
 		SetCookie("token", token, c, time.Now().Add(time.Hour*336))
 	}
-	a.Redis.Client.Del(a.Redis.Ctx, "verificationCode:"+email)
+	a.Redis.Client.Del(a.Redis.Ctx, "verificationCode:"+data.Email)
 	return c.Redirect("/account/settings")
 }
 
 func (a *Handle) emailVerification(email string) {
 	user, err := a.Redis.GetUserCache(email)
 	if err != nil {
+		a.Log.Error("error get user cache", zap.Error(err))
 		return
 	}
 	user.EmailVerified = true
 	err = a.Db.UpdateUser(user)
 	if err != nil {
-		a.Log.Error("error email verification", zap.Error(err))
+		a.Log.Error("error update user", zap.Error(err))
+		return
 	}
 	if err := a.Redis.SetUserCache(user); err != nil {
 		a.Redis.Log.Error("error set userCache", zap.Error(err))
@@ -86,5 +97,5 @@ func (a *Handle) HandleEmailResend(c *fiber.Ctx) error {
 	go func(email string) {
 		a.sendEmail(email)
 	}(email)
-	return c.JSON(fiber.Map{"message": "Code sent successfully."})
+	return c.SendString("Code sent successfully.")
 }

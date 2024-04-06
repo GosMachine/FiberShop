@@ -1,0 +1,10 @@
+package account
+
+import "FiberShop/web/view/layout"
+
+templ Index(data layout.Data) {
+    @layout.Base(data) {
+        <h1 class="text-center mt-5 font-bold  text-emerald-500 text-[3.75rem]">{data.Title}</h1>
+        @Base()
+    }
+}

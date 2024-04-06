@@ -1,23 +1,22 @@
 package handlers
 
 import (
-	"FiberShop/internal/models"
 	"FiberShop/internal/utils"
+	"FiberShop/web/view/layout"
+	"fmt"
+
+	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"go.uber.org/zap"
 )
 
-func (a *Handle) renderTemplate(c *fiber.Ctx, tmpl string, data fiber.Map) error {
-	var isAuthenticated bool
+func (a *Handle) getData(c *fiber.Ctx, title string) layout.Data {
+	//todo мб не нужен баланс
 	email, _ := utils.IsTokenValid(c.Cookies("token"))
-	var user models.User
-	if email != "" {
-		isAuthenticated = true
-		var err error
-		user, err = a.Redis.GetUserCache(email)
-		if err != nil {
-			a.Log.Error("error getting user", zap.Error(err))
-		}
+	user, err := a.Redis.GetUserCache(email)
+	if err != nil {
+		a.Log.Error("error getting user", zap.Error(err))
 	}
 
 	url := c.OriginalURL()
@@ -25,20 +24,19 @@ func (a *Handle) renderTemplate(c *fiber.Ctx, tmpl string, data fiber.Map) error
 	a.Redis.IncrementViewCounter(url, ip+":"+url)
 	viewers := a.Redis.Client.Get(a.Redis.Ctx, "viewers:"+url).Val()
 
-	FinalData := struct {
-		IsAuthenticated bool
-		EmailVerified   bool
-		Balance         float64
-		Email           string
-		Viewers         string
-		Data            interface{}
-	}{
-		IsAuthenticated: isAuthenticated,
-		EmailVerified:   user.EmailVerified,
-		Balance:         user.Balance,
-		Email:           email,
-		Viewers:         viewers,
-		Data:            data,
+	FinalData := layout.Data{
+		Title:   title,
+		Email:   email,
+		Balance: fmt.Sprintf("%f", user.Balance),
+		Viewers: viewers,
 	}
-	return c.Render(tmpl, FinalData)
+	return FinalData
+}
+
+func (a *Handle) renderTemplate(c *fiber.Ctx, component templ.Component, options ...func(*templ.ComponentHandler)) error {
+	componentHandler := templ.Handler(component)
+	for _, o := range options {
+		o(componentHandler)
+	}
+	return adaptor.HTTPHandler(componentHandler)(c)
 }

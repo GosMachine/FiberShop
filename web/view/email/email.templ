@@ -1,0 +1,68 @@
+package email
+
+import "FiberShop/web/view/layout"
+
+templ Show(action string,data layout.Data) {
+    @layout.Base(data) {
+        <section id="content" class="flex justify-center">
+            <div class="h-full px-6 py-12 text-center">
+                <div class="g-12 flex h-full items-center justify-center">
+
+                    <div  class="w-full">
+                        <h1 class="mb-2 mt-3 text-5xl text-center font-bold leading-tight dark:text-neutral-200">
+                            Confirm email
+                        </h1>
+                        <h2 class="mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200">
+                            Enter your verification code
+                        </h2>
+                        <h3 class="mb-3 mt-5 text-2xl text-center font-medium leading-tight dark:text-neutral-200">
+                            We have sent a 6-digit code to<br/><strong class="text-[16px] md:text-[24px]">{data.Email}</strong>.<br/></h3>
+                        <form hx-post="/email" hx-target="#emailError">
+                            <input type="hidden" name="email" id="email" value={data.Email}/>
+                            <input type="hidden" name="action" value={action}/>
+                            <div
+                                    class="relative mb-2 " data-te-input-wrapper-init>
+                                <input
+                                        type="text"
+                                        class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                                        id="code"
+                                        name="code"
+                                        pattern="/d{6}"
+                                        minlength="6" maxlength="6" required/>
+                                <label
+                                        for="code"
+                                        class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">Code
+                                </label>
+                            </div>
+                            <div class=" flex items-center justify-between">
+                                <button type="button" hx-post="/email/resend" hx-target="#emailError" class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700">Resend code</button>
+                            </div>
+                            <!-- Submit button -->
+                            <div id="emailError" class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center"></div>
+                            <button
+                                    id="submitBtn"
+                                    type="submit"
+                                    class="block w-full items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0"
+                                    >
+                                <span class="font-semibold">Confirm</span>
+                            </button>
+                            if action == "email_verification" {
+                                <!-- Divider -->
+                                <div
+                                        class="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
+                                    <p
+                                            class="mx-4 mb-0 text-center font-semibold dark:text-neutral-200">
+                                        <span class="font-semibold">OR</span>
+                                    </p>
+                                </div>
+
+                                <a href="/" role="button" class="font-semibold text-[0.9rem] text-center block w-full rounded bg-[#ee1414] text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-red-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-red-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Remind me later</a>
+                            }
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}

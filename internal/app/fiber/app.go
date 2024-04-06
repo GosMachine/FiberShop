@@ -7,13 +7,13 @@ import (
 	"FiberShop/internal/middleware"
 	"FiberShop/internal/routes"
 	"FiberShop/internal/transport/grpc/auth"
+	"os"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/template/html/v2"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/google"
 	"go.uber.org/zap"
-	"os"
 )
 
 type App struct {
@@ -22,8 +22,7 @@ type App struct {
 }
 
 func New(log *zap.Logger, authClient *auth.Client, db *postgres.Storage, redis *redis.Redis) *App {
-	engine := html.New("./web/templates", ".html")
-	app := fiber.New(fiber.Config{Views: engine})
+	app := fiber.New()
 	middle := middleware.New(log)
 	goth.UseProviders(
 		google.New(os.Getenv("googleClientKey"), os.Getenv("googleClientSecret"), "http://localhost:3000/auth/callback/google"),
