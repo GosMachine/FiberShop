@@ -12,7 +12,7 @@ import "bytes"
 
 import "FiberShop/web/view/layout"
 
-func Show(action string, data layout.Data) templ.Component {
+func Show(email, action string, data layout.Data) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -36,9 +36,9 @@ func Show(action string, data layout.Data) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(data.Email)
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(email)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/email/email.templ`, Line: 19, Col: 117}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/email/email.templ`, Line: 19, Col: 112}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -49,9 +49,9 @@ func Show(action string, data layout.Data) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(data.Email)
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(email)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/email/email.templ`, Line: 21, Col: 90}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/email/email.templ`, Line: 21, Col: 85}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {

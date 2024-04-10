@@ -2,7 +2,7 @@ package email
 
 import "FiberShop/web/view/layout"
 
-templ Show(action string,data layout.Data) {
+templ Show(email, action string,data layout.Data) {
     @layout.Base(data) {
         <section id="content" class="flex justify-center">
             <div class="h-full px-6 py-12 text-center">
@@ -16,9 +16,9 @@ templ Show(action string,data layout.Data) {
                             Enter your verification code
                         </h2>
                         <h3 class="mb-3 mt-5 text-2xl text-center font-medium leading-tight dark:text-neutral-200">
-                            We have sent a 6-digit code to<br/><strong class="text-[16px] md:text-[24px]">{data.Email}</strong>.<br/></h3>
+                            We have sent a 6-digit code to<br/><strong class="text-[16px] md:text-[24px]">{email}</strong>.<br/></h3>
                         <form hx-post="/email" hx-target="#emailError">
-                            <input type="hidden" name="email" id="email" value={data.Email}/>
+                            <input type="hidden" name="email" id="email" value={email}/>
                             <input type="hidden" name="action" value={action}/>
                             <div
                                     class="relative mb-2 " data-te-input-wrapper-init>

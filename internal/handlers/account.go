@@ -47,7 +47,7 @@ func (a *Handle) HandleAccountVerification(c *fiber.Ctx) error {
 	go func(email string) {
 		a.sendEmail(email, code)
 	}(email1)
-	return a.renderTemplate(c, email.Show("email_verification", a.getData(c, "Email")))
+	return a.renderTemplate(c, email.Show(email1, "email_verification", a.getData(c, "Email")))
 }
 
 func (a *Handle) HandleSettingsChangeEmail(c *fiber.Ctx) error {
@@ -61,7 +61,7 @@ func (a *Handle) HandleSettingsChangeEmail(c *fiber.Ctx) error {
 		a.Redis.Client.Set(a.Redis.Ctx, "change_email:"+email, newEmail, time.Minute*30)
 		a.sendEmail(email, code)
 	}(email1)
-	return a.renderTemplate(c, email.Show("change_email", a.getData(c, "Email")))
+	return a.renderTemplate(c, email.Show(email1, "change_email", a.getData(c, "Email")))
 }
 
 func (a *Handle) HandleSettingsChangePass(c *fiber.Ctx) error {
@@ -70,7 +70,7 @@ func (a *Handle) HandleSettingsChangePass(c *fiber.Ctx) error {
 	go func(email string) {
 		a.sendEmail(email, code)
 	}(email1)
-	return a.renderTemplate(c, email.Show("change_pass", a.getData(c, "Email")))
+	return a.renderTemplate(c, email.Show(email1, "change_pass", a.getData(c, "Email")))
 }
 
 func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {

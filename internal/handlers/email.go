@@ -113,7 +113,7 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 	email1 := c.Query("address")
 	if a.Redis.Client.Get(a.Redis.Ctx, "verificationCode:"+email1).Val() != "" {
 		action := c.Query("action")
-		return a.renderTemplate(c, email.Show(action, a.getData(c, "Email")))
+		return a.renderTemplate(c, email.Show(email1, action, a.getData(c, "Email")))
 	}
 	return a.renderTemplate(c, layout.NotFound(a.getData(c, "Page not found")))
 }
