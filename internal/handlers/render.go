@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"FiberShop/internal/models"
 	"FiberShop/internal/utils"
 	"FiberShop/web/view/layout"
 	"fmt"
@@ -14,9 +15,15 @@ import (
 func (a *Handle) getData(c *fiber.Ctx, title string) layout.Data {
 	//todo мб не нужен баланс
 	email, _ := utils.IsTokenValid(c.Cookies("token"))
-	user, err := a.Redis.GetUserCache(email)
-	if err != nil {
-		a.Log.Error("error getting user", zap.Error(err))
+	var (
+		err  error
+		user models.User
+	)
+	if email != "" {
+		user, err = a.Redis.GetUserCache(email)
+		if err != nil {
+			a.Log.Error("error getting user", zap.Error(err))
+		}
 	}
 
 	url := c.OriginalURL()

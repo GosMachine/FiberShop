@@ -44,95 +44,97 @@ func Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64)
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<style>\n            @layer utilities {\n                input[type=\"number\"]::-webkit-inner-spin-button,\n                input[type=\"number\"]::-webkit-outer-spin-button {\n                    -webkit-appearance: none;\n                    margin: 0;\n                }\n            }\n        </style> <h1 class=\"text-center mt-5 font-bold  text-emerald-500 text-[3.75rem]\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<style>\n            @layer utilities {\n                input[type=\"number\"]::-webkit-inner-spin-button,\n                input[type=\"number\"]::-webkit-outer-spin-button {\n                    -webkit-appearance: none;\n                    margin: 0;\n                }\n            }\n        </style> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(data.Title)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 29, Col: 91}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h1><section class=\"flex justify-center \"><div class=\"xl:mx-20 justify-center flex-1 px-1 py-6 lg:py-4\"><div class=\"flex flex-wrap\"><div class=\"w-full lg:w-9/12\"><div class=\"px-10\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			for _, item := range cartItems {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative flex flex-wrap items-center pb-8 mb-8 -mx-4 border-b border-gray-200 dark:border-gray-700 xl:justify-between border-opacity-40\"><div class=\"w-full mb-2 lg:mb-0 h-96 md:h-44 md:w-44\"><img src=\"")
+			if len(cartItems) < 1 {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1 class=\"text-center mt-5 font-bold  text-emerald-500 text-[3.75rem]\">Your Cart is empty</h1>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var4 string
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(item.Product.ImageURL)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 39, Col: 71}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			} else {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1 class=\"text-center mt-5 font-bold  text-emerald-500 text-[3.75rem]\">Your Cart</h1><section class=\"flex justify-center \"><div class=\"xl:mx-20 justify-center flex-1 px-1 py-6 lg:py-4\"><div class=\"flex flex-wrap\"><div class=\"w-full lg:w-9/12\"><div class=\"px-10\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" alt=\"\" class=\"object-cover w-full h-full\"></div><div class=\"w-full px-4 md:w-auto xl:mb-0\"><a class=\"block mb-3 text-xl font-medium dark:text-white hover:underline\" href=\"#\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+				for _, item := range cartItems {
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"relative flex flex-wrap items-center pb-8 mb-8 -mx-4 border-b border-gray-200 dark:border-gray-700 xl:justify-between border-opacity-40\"><div class=\"w-full mb-2 lg:mb-0 h-96 md:h-44 md:w-44\"><img src=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var3 string
+					templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(item.Product.ImageURL)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 42, Col: 71}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" alt=\"\" class=\"object-cover w-full h-full\"></div><div class=\"w-full px-4 md:w-auto xl:mb-0\"><a class=\"block mb-3 text-xl font-medium dark:text-white hover:underline\" href=\"#\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var4 string
+					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(item.Product.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 47, Col: 62}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a><div class=\"flex mb-2 flex-wrap\"><p class=\"mr-4 text-sm font-medium\"><span class=\"dark:text-white\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var5 string
+					templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(item.Product.Description)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 50, Col: 103}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span><!--                                    <span class=\"ml-2 text-gray-600 dark:text-gray-300\">yellow</span>--></p><!--                                <p class=\"text-sm font-medium dark:text-white\">--><!--                                    <span>Size:</span>--><!--                                    <span class=\"ml-2 text-gray-600 dark:text-gray-300\">38</span>--><!--                                </p>--></div></div><a class=\"block items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0\" href=\"#\">Remove</a></div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
-				var templ_7745c5c3_Var5 string
-				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(item.Product.Name)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 44, Col: 62}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a><div class=\"flex mb-2 flex-wrap\"><p class=\"mr-4 text-sm font-medium\"><span class=\"dark:text-white\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"w-full lg:w-3/12\"><div class=\"px-6 mb-14\"><div class=\"mb-10\"><span class=\"mb-6 text-3xl font-bold dark:text-white\">Apply Coupon</span> <input type=\"text\" id=\"code\" class=\"flex-1 w-full px-8 py-4 mt-4 font-normal placeholder-gray-400 border dark:bg-gray-800 rounded-xl dark:border-gray-700 dark:placeholder-gray-500 md:flex-none md:mr-6 dark:text-gray-400\" placeholder=\"x304k45\"><div id=\"couponError\" class=\"flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center\"></div><div id=\"couponSuccess\" class=\"flex text-[#14a44d] text-[1.1rem] font-semibold justify-center items-center\"></div><button id=\"couponBtn\" class=\"block w-full text-center mt-4 rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0\" href=\"#\">Apply</button></div><div><h2 class=\"mb-6 text-3xl font-bold dark:text-white\">Cart totals</h2><div class=\"flex items-center justify-between px-5 py-4 mb-3 font-medium leading-8 bg-gray-100 bg-opacity-50 border dark:text-white dark:bg-gray-800 dark:border-gray-800 rounded-xl\"><span>Subtotal</span> <span class=\"flex dark:text-gray-400 items-center text-xl\"><span class=\"mr-2 text-base\">$</span> <span id=\"subTotalCartPrice\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var6 string
-				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(item.Product.Description)
+				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(printfString("2.%f", totalCartPrice))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 47, Col: 103}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 108, Col: 111}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span><!--                                    <span class=\"ml-2 text-gray-600 dark:text-gray-300\">yellow</span>--></p><!--                                <p class=\"text-sm font-medium dark:text-white\">--><!--                                    <span>Size:</span>--><!--                                    <span class=\"ml-2 text-gray-600 dark:text-gray-300\">38</span>--><!--                                </p>--></div></div><a class=\"block items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0\" href=\"#\">Remove</a></div>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></span></div><div class=\"flex items-center justify-between px-5 py-4 mb-3 font-medium leading-8 bg-gray-100 bg-opacity-50 border dark:text-white dark:bg-gray-800 dark:border-gray-800 rounded-xl\"><span>Coupon</span> <span class=\"flex dark:text-gray-400 items-center text-xl\"><span class=\"mr-2 text-base\">$</span> <span id=\"couponValue\">0</span></span></div><div class=\"flex items-center justify-between px-5 py-4 mb-6 font-medium leading-8 bg-gray-100 border dark:text-white dark:bg-gray-800 dark:border-gray-800 rounded-xl\"><span>Total</span> <span class=\"flex items-center text-xl text-emerald-500\"><span class=\"mr-2 text-base\">$</span> <span id=\"totalCartPrice\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var7 string
+				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(printfString("2.%f", totalCartPrice))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 124, Col: 108}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></span></div><a class=\"block text-center mt-4 rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0\" href=\"#\">Checkout</a></div></div></div></div></div></section>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><div class=\"w-full lg:w-3/12\"><div class=\"px-6 mb-14\"><div class=\"mb-10\"><span class=\"mb-6 text-3xl font-bold dark:text-white\">Apply Coupon</span> <input type=\"text\" id=\"code\" class=\"flex-1 w-full px-8 py-4 mt-4 font-normal placeholder-gray-400 border dark:bg-gray-800 rounded-xl dark:border-gray-700 dark:placeholder-gray-500 md:flex-none md:mr-6 dark:text-gray-400\" placeholder=\"x304k45\"><div id=\"couponError\" class=\"flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center\"></div><div id=\"couponSuccess\" class=\"flex text-[#14a44d] text-[1.1rem] font-semibold justify-center items-center\"></div><button id=\"couponBtn\" class=\"block w-full text-center mt-4 rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0\" href=\"#\">Apply</button></div><div><h2 class=\"mb-6 text-3xl font-bold dark:text-white\">Cart totals</h2><div class=\"flex items-center justify-between px-5 py-4 mb-3 font-medium leading-8 bg-gray-100 bg-opacity-50 border dark:text-white dark:bg-gray-800 dark:border-gray-800 rounded-xl\"><span>Subtotal</span> <span class=\"flex dark:text-gray-400 items-center text-xl\"><span class=\"mr-2 text-base\">$</span> <span id=\"subTotalCartPrice\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var7 string
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(printfString("2.%f", totalCartPrice))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 105, Col: 111}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></span></div><div class=\"flex items-center justify-between px-5 py-4 mb-3 font-medium leading-8 bg-gray-100 bg-opacity-50 border dark:text-white dark:bg-gray-800 dark:border-gray-800 rounded-xl\"><span>Coupon</span> <span class=\"flex dark:text-gray-400 items-center text-xl\"><span class=\"mr-2 text-base\">$</span> <span id=\"couponValue\">0</span></span></div><div class=\"flex items-center justify-between px-5 py-4 mb-6 font-medium leading-8 bg-gray-100 border dark:text-white dark:bg-gray-800 dark:border-gray-800 rounded-xl\"><span>Total</span> <span class=\"flex items-center text-xl text-emerald-500\"><span class=\"mr-2 text-base\">$</span> <span id=\"totalCartPrice\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var8 string
-			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(printfString("2.%f", totalCartPrice))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 121, Col: 108}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></span></div><a class=\"block text-center mt-4 rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0\" href=\"#\">Checkout</a></div></div></div></div></div></section>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

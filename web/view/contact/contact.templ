@@ -17,7 +17,7 @@ templ Show(data layout.Data) {
                         <h3 class="mb-3 mt-5 text-2xl text-center font-medium leading-tight dark:text-neutral-200">
                             We are here to help, if you have questions, reach out and we will respond within 24 hours.
                         </h3>
-                        <form hx-post="/contact" hx-target="#result" >
+                        <form hx-post="/contact" hx-target="#alert" >
                             <div class="relative mb-6" data-te-input-wrapper-init>
                                 <input
                                         type="text"
@@ -70,7 +70,7 @@ templ Show(data layout.Data) {
                             </button>
                         </form>
                     </div>
-                    <div id="result"></div>
+                    <div id="alert"></div>
                 </div>
             </div>
         </section>

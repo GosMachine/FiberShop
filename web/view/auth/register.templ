@@ -42,7 +42,7 @@ templ Register(data layout.Data) {
                                         type="password"
                                         class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                                         id="password"
-                                        pattern="^[A-Za-z/d@$!%*?&]{8,}$"
+                                        pattern="^[A-Za-z\\d@$!%*?&]{8,}$"
                                         minlength="8"
                                         name="password"
                                         placeholder="Password" />
@@ -60,7 +60,7 @@ templ Register(data layout.Data) {
                                         type="password"
                                         class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                                         id="confirmPassword"
-                                        pattern="^[A-Za-z/d@$!%*?&]{8,}$"
+                                        pattern="^[A-Za-z\\d@$!%*?&]{8,}$"
                                         minlength="8"
                                         name="confirmPassword"
                                         placeholder="Password" />

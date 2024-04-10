@@ -5,9 +5,10 @@ import (
 	"FiberShop/web/view/alerts"
 	"FiberShop/web/view/auth"
 	"FiberShop/web/view/contact"
-	"FiberShop/web/view/email"
 	"FiberShop/web/view/index"
 	"FiberShop/web/view/layout"
+	"math/rand"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
@@ -29,20 +30,19 @@ func (a *Handle) HandleAccountRecoveryForm(c *fiber.Ctx) error {
 	var data RequestData
 	if err := c.BodyParser(&data); err != nil {
 		a.Log.Error("bodyParse error", zap.Error(err))
-		return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
-	}
-	if data.Password != data.ConfirmPassword {
-		return c.SendString("Password mismatch.")
+		return c.SendString("Internal error. Please try again.")
 	}
 	_, err := a.Db.User(data.Email)
 	if err != nil {
 		a.Log.Error("account_recovery error", zap.Error(err))
-		return c.Status(fiber.StatusBadRequest).SendString("User is not found")
+		return c.SendString("User is not found")
 	}
+	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 	go func(email string) {
-		a.sendEmail(email)
+		a.sendEmail(email, code)
 	}(data.Email)
-	return a.renderTemplate(c, email.Show("account_recovery", a.getData(c, "Email")))
+	c.Set("HX-Redirect", "/email?action=account_recovery&address="+data.Email)
+	return c.SendStatus(200)
 }
 
 func (a *Handle) HandleNotFound(c *fiber.Ctx) error {

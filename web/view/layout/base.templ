@@ -14,7 +14,7 @@ templ Base(data Data) {
       <meta charset="UTF-8"></meta>
       <title>{data.Title}</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-      <link rel="stylesheet" href="/styles/output.css"></link>
+      <script src="/js/htmx.min.js"></script>
       <script>
         try {
           if (
@@ -31,7 +31,7 @@ templ Base(data Data) {
           }
         } catch (_) {}
       </script>
-      <script src="/js/htmx.min.js"></script>
+      <link rel="stylesheet" href="/styles/output.css"></link>
     </head>
     <body class=" dark:bg-neutral-800 dark:shadow-black/10">
     <nav

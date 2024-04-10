@@ -3,8 +3,9 @@ package handlers
 import (
 	"FiberShop/internal/utils"
 	"FiberShop/web/view/auth"
-	"FiberShop/web/view/email"
 	"context"
+	"math/rand"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -58,7 +59,7 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 	)
 	if err := c.BodyParser(&data); err != nil {
 		a.Log.Error("bodyParse error", zap.Error(err))
-		return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
+		return c.SendString("Internal error. Please try again.")
 	}
 	switch action {
 	case "register":
@@ -73,14 +74,14 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		if st, ok := status.FromError(err); ok {
 			if st.Code() == codes.InvalidArgument {
 				a.Log.Error(action+" error", zap.Error(err))
-				return c.Status(fiber.StatusBadRequest).SendString("Invalid email or password.")
+				return c.SendString("Invalid email or password.")
 			} else if st.Code() == codes.AlreadyExists {
 				a.Log.Error(action+" error", zap.Error(err))
-				return c.Status(fiber.StatusBadRequest).SendString("User already exists.")
+				return c.SendString("User already exists.")
 			}
 		}
 		a.Log.Error("login error", zap.Error(err))
-		return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
+		return c.SendString("Internal error. Please try again.")
 	}
 	expires := time.Now().Add(time.Hour * 24)
 	if data.Remember == "on" {
@@ -88,12 +89,15 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 	}
 	SetCookie("token", token, c, expires)
 	if action == "register" {
+		code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 		go func(data RequestData) {
-			a.sendEmail(data.Email)
+			a.sendEmail(data.Email, code)
 		}(data)
-		return a.renderTemplate(c, email.Show("email_verification", a.getData(c, "Email")))
+		c.Set("HX-Redirect", "/email?action=email_verification&address="+data.Email)
+		return c.SendStatus(200)
 	}
-	return c.Redirect("/")
+	c.Set("HX-Redirect", "/")
+	return c.SendStatus(200)
 }
 
 func (a *Handle) HandleOAuthCallback(c *fiber.Ctx) error {

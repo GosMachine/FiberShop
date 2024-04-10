@@ -3,6 +3,6 @@ http_server:
   address: ":3000"
 clients:
   auth:
-    address: "localhost:44044"
+    address: "localhost:44043"
     timeout: 2
     retries_count: 1

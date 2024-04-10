@@ -7,8 +7,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 	"gopkg.in/gomail.v2"
-	"math/rand"
-	"strconv"
 	"time"
 )
 
@@ -33,8 +31,7 @@ func SetCookie(name, value string, c *fiber.Ctx, expires time.Time) {
 	c.Cookie(&cookie)
 }
 
-func (a *Handle) sendEmail(email string) {
-	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
+func (a *Handle) sendEmail(email, code string) {
 	a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
 	message := gomail.NewMessage()
 	message.SetHeader("From", "support@fiber.shop")

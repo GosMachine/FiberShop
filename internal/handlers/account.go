@@ -4,6 +4,8 @@ import (
 	"FiberShop/internal/utils"
 	"FiberShop/web/view/account"
 	"FiberShop/web/view/email"
+	"math/rand"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,7 +23,7 @@ func (a *Handle) HandleAccountSettings(c *fiber.Ctx) error {
 	if err != nil {
 		a.Log.Error("error getting user", zap.Error(err))
 	}
-
+	a.Log.Info("", zap.Bool("email", user.EmailVerified))
 	return a.renderTemplate(c, account.Settings(user.EmailVerified, a.getData(c, "Settings")))
 }
 
@@ -41,8 +43,9 @@ func (a *Handle) HandleAccountCart(c *fiber.Ctx) error {
 
 func (a *Handle) HandleAccountVerification(c *fiber.Ctx) error {
 	email1 := c.FormValue("email")
+	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 	go func(email string) {
-		a.sendEmail(email)
+		a.sendEmail(email, code)
 	}(email1)
 	return a.renderTemplate(c, email.Show("email_verification", a.getData(c, "Email")))
 }
@@ -53,17 +56,19 @@ func (a *Handle) HandleSettingsChangeEmail(c *fiber.Ctx) error {
 	if _, err := a.Db.User(newEmail); err == nil {
 		return c.Status(fiber.StatusBadRequest).SendString("Email already used.")
 	}
+	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 	go func(email string) {
 		a.Redis.Client.Set(a.Redis.Ctx, "change_email:"+email, newEmail, time.Minute*30)
-		a.sendEmail(email)
+		a.sendEmail(email, code)
 	}(email1)
 	return a.renderTemplate(c, email.Show("change_email", a.getData(c, "Email")))
 }
 
 func (a *Handle) HandleSettingsChangePass(c *fiber.Ctx) error {
 	email1 := c.FormValue("email")
+	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 	go func(email string) {
-		a.sendEmail(email)
+		a.sendEmail(email, code)
 	}(email1)
 	return a.renderTemplate(c, email.Show("change_pass", a.getData(c, "Email")))
 }

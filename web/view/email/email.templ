@@ -27,7 +27,7 @@ templ Show(action string,data layout.Data) {
                                         class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                                         id="code"
                                         name="code"
-                                        pattern="/d{6}"
+                                        pattern="\\d{6}"
                                         minlength="6" maxlength="6" required/>
                                 <label
                                         for="code"
@@ -35,7 +35,7 @@ templ Show(action string,data layout.Data) {
                                 </label>
                             </div>
                             <div class=" flex items-center justify-between">
-                                <button type="button" hx-post="/email/resend" hx-target="#emailError" class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700">Resend code</button>
+                                <button type="button" id="resendBtn" hx-post="/email/resend" hx-target="#alert" class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700">Resend code</button>
                             </div>
                             <!-- Submit button -->
                             <div id="emailError" class="flex text-[#FF0000] text-[1.1rem] font-semibold justify-center items-center"></div>
@@ -59,10 +59,19 @@ templ Show(action string,data layout.Data) {
                                 <a href="/" role="button" class="font-semibold text-[0.9rem] text-center block w-full rounded bg-[#ee1414] text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-red-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-red-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Remind me later</a>
                             }
                         </form>
-
                     </div>
+                    <div id="alert"></div>
                 </div>
             </div>
         </section>
+        <script>
+            var resendButton = document.getElementById('resendBtn');
+            resendButton.addEventListener('click', function() {
+                resendButton.disabled = true;
+                setTimeout(() => {
+                    resendButton.disabled = false;
+                }, 5000);
+            });
+        </script>
     }
 }

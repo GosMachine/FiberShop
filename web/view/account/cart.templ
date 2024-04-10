@@ -26,8 +26,11 @@ templ Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64
                 }
             }
         </style>
-        <h1 class="text-center mt-5 font-bold  text-emerald-500 text-[3.75rem]">{data.Title}</h1>
-        <section class="flex justify-center ">
+        if len(cartItems) < 1 {
+            <h1 class="text-center mt-5 font-bold  text-emerald-500 text-[3.75rem]">Your Cart is empty</h1>
+        } else {
+            <h1 class="text-center mt-5 font-bold  text-emerald-500 text-[3.75rem]">Your Cart</h1>
+            <section class="flex justify-center ">
             <div class="xl:mx-20 justify-center flex-1 px-1 py-6 lg:py-4">
                 <div class="flex flex-wrap">
                     <div class="w-full lg:w-9/12">
@@ -129,6 +132,7 @@ templ Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64
                 </div>
             </div>
         </section>
+        }
         @Base()
     }
 }
