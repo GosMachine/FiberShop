@@ -9,6 +9,7 @@ import (
 	"FiberShop/web/view/layout"
 	"math/rand"
 	"strconv"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
@@ -39,6 +40,7 @@ func (a *Handle) HandleAccountRecoveryForm(c *fiber.Ctx) error {
 	}
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 	go func(email string) {
+		a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
 		a.sendEmail(email, code)
 	}(data.Email)
 	c.Set("HX-Redirect", "/email?action=account_recovery&address="+data.Email)

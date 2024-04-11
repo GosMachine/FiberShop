@@ -91,6 +91,7 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 	if action == "register" {
 		code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 		go func(data RequestData) {
+			a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+data.Email, code, time.Minute*10)
 			a.sendEmail(data.Email, code)
 		}(data)
 		c.Set("HX-Redirect", "/email?action=email_verification&address="+data.Email)

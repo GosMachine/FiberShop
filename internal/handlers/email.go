@@ -46,10 +46,16 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 		SetCookie("token", token, c, time.Now().Add(time.Hour*24))
 		a.Redis.Client.Set(a.Redis.Ctx, "emailVerified:"+data.Email, true, time.Minute*10)
 		c.Set("HX-Redirect", "/account/settings/change_pass")
+		go func() {
+			a.sendEmail(data.Email, "password successfully changed")
+		}()
 		return c.SendStatus(200)
 	case "change_pass":
 		a.Redis.Client.Set(a.Redis.Ctx, "emailVerified:"+data.Email, true, time.Minute*10)
 		c.Set("HX-Redirect", "/account/settings/change_pass")
+		go func() {
+			a.sendEmail(data.Email, "password successfully changed")
+		}()
 		return c.SendStatus(200)
 	case "change_email":
 		newEmail, err := a.Redis.Client.Get(a.Redis.Ctx, "change_email:"+data.Email).Result()
@@ -79,6 +85,9 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 			return c.SendString("Internal error. Please try again.")
 		}
 		SetCookie("token", token, c, time.Now().Add(time.Hour*336))
+		go func() {
+			a.sendEmail(newEmail, "email successfully changed")
+		}()
 	}
 	a.Redis.Client.Del(a.Redis.Ctx, "verificationCode:"+data.Email)
 	c.Set("HX-Redirect", "/account")
@@ -107,6 +116,7 @@ func (a *Handle) HandleEmailResend(c *fiber.Ctx) error {
 	email := c.FormValue("email")
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 	go func(email string) {
+		a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
 		a.sendEmail(email, code)
 	}(email)
 	return a.renderTemplate(c, alerts.Success("Code", a.getData(c, "Email")))

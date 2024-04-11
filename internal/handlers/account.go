@@ -47,6 +47,7 @@ func (a *Handle) HandleAccountVerification(c *fiber.Ctx) error {
 	email1 := c.FormValue("email")
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 	go func(email string) {
+		a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
 		a.sendEmail(email, code)
 	}(email1)
 	return a.renderTemplate(c, email.Show(email1, "email_verification", a.getData(c, "Email")))
@@ -56,20 +57,23 @@ func (a *Handle) HandleSettingsChangeEmail(c *fiber.Ctx) error {
 	email1 := c.FormValue("email")
 	newEmail := c.FormValue("newEmail")
 	if _, err := a.Db.User(newEmail); err == nil {
-		return c.Status(fiber.StatusBadRequest).SendString("Email already used.")
+		return c.SendString("Email already used.")
 	}
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 	go func(email string) {
-		a.Redis.Client.Set(a.Redis.Ctx, "change_email:"+email, newEmail, time.Minute*30)
+		a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
+		a.Redis.Client.Set(a.Redis.Ctx, "change_email:"+email, newEmail, time.Minute*10)
 		a.sendEmail(email, code)
 	}(email1)
-	return a.renderTemplate(c, email.Show(email1, "change_email", a.getData(c, "Email")))
+	c.Set("HX-Redirect", "/email?action=change_email&address="+email1)
+	return c.SendStatus(200)
 }
 
 func (a *Handle) HandleSettingsChangePass(c *fiber.Ctx) error {
 	email1 := c.FormValue("email")
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
 	go func(email string) {
+		a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
 		a.sendEmail(email, code)
 	}(email1)
 	return c.Redirect("/email?action=change_pass&address=" + email1)

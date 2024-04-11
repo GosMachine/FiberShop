@@ -31,17 +31,16 @@ func SetCookie(name, value string, c *fiber.Ctx, expires time.Time) {
 	c.Cookie(&cookie)
 }
 
-func (a *Handle) sendEmail(email, code string) {
-	a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
+func (a *Handle) sendEmail(email, msg string) {
 	message := gomail.NewMessage()
 	message.SetHeader("From", "support@fiber.shop")
 	message.SetHeader("To", email)
 	message.SetHeader("Subject", "FiberShop")
-	message.SetBody("text/plain", code)
+	message.SetBody("text/plain", msg)
 	dialer := gomail.NewDialer("smtp.gmail.com", 587, "masterok6000@gmail.com", "atgtullwzawcfexa")
 	if err := dialer.DialAndSend(message); err != nil {
-		a.Log.Error("error send verification code "+email, zap.Error(err))
+		a.Log.Error("error send email "+email, zap.Error(err))
 		return
 	}
-	a.Log.Info("send verification code", zap.String("email", email))
+	a.Log.Info("send email success", zap.String("email", email))
 }
