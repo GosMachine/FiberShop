@@ -6,3 +6,9 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+.idea/workspace.xml
+/vcs.xml
+/modules.xml
+/FiberShop.iml
+/inspectionProfiles/Project_Default.xml
+./.vscode
