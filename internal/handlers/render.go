@@ -34,7 +34,7 @@ func (a *Handle) getData(c *fiber.Ctx, title string) layout.Data {
 	FinalData := layout.Data{
 		Title:   title,
 		Email:   email,
-		Balance: fmt.Sprintf("%f", user.Balance),
+		Balance: fmt.Sprintf("%.2f", user.Balance),
 		Viewers: viewers,
 	}
 	return FinalData

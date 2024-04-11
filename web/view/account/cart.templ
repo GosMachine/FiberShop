@@ -4,16 +4,7 @@ import (
     "FiberShop/web/view/layout"
     "FiberShop/internal/models"
 	"fmt"
-	"strconv"
 )
-
-func printfString(format string, a ...any) string {
-    res, err := fmt.Printf(format, a...)
-    if err != nil {
-        return ""
-    }
-    return strconv.Itoa(res) 
-}
 
 templ Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64) {
     @layout.Base(data) {
@@ -105,7 +96,7 @@ templ Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64
                                     <span>Subtotal</span>
                                     <span class="flex dark:text-gray-400 items-center text-xl">
                                             <span class="mr-2 text-base">$</span>
-                                            <span id="subTotalCartPrice">{ printfString("2.%f", totalCartPrice) }</span>
+                                            <span id="subTotalCartPrice">{ fmt.Sprintf("2.%f", totalCartPrice) }</span>
                                         </span>
                                 </div>
                                 <div
@@ -121,7 +112,7 @@ templ Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64
                                     <span>Total</span>
                                     <span class="flex items-center text-xl text-emerald-500">
                                             <span class="mr-2 text-base">$</span>
-                                            <span id="totalCartPrice">{ printfString("2.%f", totalCartPrice) }</span>
+                                            <span id="totalCartPrice">{ fmt.Sprintf("2.%f", totalCartPrice) }</span>
                                         </span>
                                 </div>
                                 <a class="block text-center mt-4 rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0" href="#">

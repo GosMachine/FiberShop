@@ -14,16 +14,7 @@ import (
 	"FiberShop/internal/models"
 	"FiberShop/web/view/layout"
 	"fmt"
-	"strconv"
 )
-
-func printfString(format string, a ...any) string {
-	res, err := fmt.Printf(format, a...)
-	if err != nil {
-		return ""
-	}
-	return strconv.Itoa(res)
-}
 
 func Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
@@ -66,7 +57,7 @@ func Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64)
 					var templ_7745c5c3_Var3 string
 					templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(item.Product.ImageURL)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 42, Col: 71}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 33, Col: 71}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 					if templ_7745c5c3_Err != nil {
@@ -79,7 +70,7 @@ func Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64)
 					var templ_7745c5c3_Var4 string
 					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(item.Product.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 47, Col: 62}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 38, Col: 62}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {
@@ -92,7 +83,7 @@ func Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64)
 					var templ_7745c5c3_Var5 string
 					templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(item.Product.Description)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 50, Col: 103}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 41, Col: 103}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 					if templ_7745c5c3_Err != nil {
@@ -108,9 +99,9 @@ func Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64)
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var6 string
-				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(printfString("2.%f", totalCartPrice))
+				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("2.%f", totalCartPrice))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 108, Col: 111}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 99, Col: 110}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -121,9 +112,9 @@ func Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64)
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var7 string
-				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(printfString("2.%f", totalCartPrice))
+				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("2.%f", totalCartPrice))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 124, Col: 108}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/account/cart.templ`, Line: 115, Col: 107}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 				if templ_7745c5c3_Err != nil {
