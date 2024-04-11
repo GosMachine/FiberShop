@@ -21,6 +21,21 @@ services:
       - shop
     volumes:
       - redis_data:/FiberShop/data
+  
+  auth:
+    image: gosmach1ne/serviceauth
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: FiberShop
+      POSTGRES_PORT: 5432
+    ports:
+      - "44043:44043"
+    networks:
+      - shop
+    depends_on:
+      - postgres
 networks:
   shop:
 
