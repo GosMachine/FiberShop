@@ -3,7 +3,9 @@ package handlers
 import (
 	"FiberShop/internal/utils"
 	"FiberShop/web/view/account"
+	"FiberShop/web/view/auth"
 	"FiberShop/web/view/email"
+	"FiberShop/web/view/layout"
 	"math/rand"
 	"strconv"
 	"time"
@@ -70,22 +72,34 @@ func (a *Handle) HandleSettingsChangePass(c *fiber.Ctx) error {
 	go func(email string) {
 		a.sendEmail(email, code)
 	}(email1)
-	return a.renderTemplate(c, email.Show(email1, "change_pass", a.getData(c, "Email")))
+	return c.Redirect("/email?action=change_pass&address=" + email1)
+}
+
+func (a *Handle) HandleChangePass(c *fiber.Ctx) error {
+	email1, _ := utils.IsTokenValid(c.Cookies("token"))
+	exist := a.Redis.Client.Exists(a.Redis.Ctx, "emailVerified:"+email1).Val()
+	if exist != 1 {
+		return a.renderTemplate(c, layout.NotFound(a.getData(c, "Page not found")))
+	}
+	return a.renderTemplate(c, auth.ChangePass(a.getData(c, "Change Password")))
 }
 
 func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {
 	pass := c.FormValue("password")
+	confirmPassword := c.FormValue("confirmPassword")
 	email1 := c.FormValue("email")
-	action := c.FormValue("action")
+	if pass != confirmPassword || pass == "" || len(pass) < 8 {
+		return c.SendString("Password does not match or less than 8 characters.")
+	}
 	passHash, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.MinCost)
 	if err != nil {
 		a.Log.Error("failed to generate password hash", zap.Error(err))
-		return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
+		return c.SendString("Internal error. Please try again.")
 	}
 	user, err := a.Redis.GetUserCache(email1)
 	if err != nil {
 		a.Log.Error("failed to get user cache", zap.Error(err))
-		return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
+		return c.SendString("Internal error. Please try again.")
 	}
 	user.PassHash = passHash
 	user.LastLoginIp = c.IP()
@@ -93,14 +107,13 @@ func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {
 	err = a.Db.UpdateUser(user)
 	if err != nil {
 		a.Log.Error("failed to update user", zap.Error(err))
-		return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
+		return c.SendString("Internal error. Please try again.")
 	}
 	if err := a.Redis.SetUserCache(user); err != nil {
 		a.Log.Error("error set userCache", zap.Error(err))
 	}
+	a.Redis.Client.Del(a.Redis.Ctx, "emailVerified:"+email1)
 	a.Log.Info("password changed successfully", zap.String("email", email1))
-	if action == "change_pass" {
-		return c.Redirect("/account")
-	}
-	return c.Redirect("/")
+	c.Set("HX-Redirect", "/account")
+	return c.SendStatus(200)
 }

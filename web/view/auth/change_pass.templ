@@ -2,7 +2,7 @@ package auth
 
 import "FiberShop/web/view/layout"
 
-templ ChangePass(action string,data layout.Data) {
+templ ChangePass(data layout.Data) {
     @layout.Base(data) {
         <section class="flex justify-center">
             <div class="h-full px-6 py-12 text-center">
@@ -16,7 +16,6 @@ templ ChangePass(action string,data layout.Data) {
 
                         <form hx-post="/account/change_pass" hx-target="#changePassError">
                             <input type="hidden" name="email" value={data.Email}/>
-                            <input type="hidden" name="action" value={action}/>
                             <div
                                     class="relative mb-6"
                                     data-te-input-wrapper-init>

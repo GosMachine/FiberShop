@@ -3,7 +3,6 @@ package handlers
 import (
 	"FiberShop/internal/utils"
 	"FiberShop/web/view/alerts"
-	"FiberShop/web/view/auth"
 	"FiberShop/web/view/email"
 	"FiberShop/web/view/layout"
 	"fmt"
@@ -45,9 +44,13 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 			return c.SendString("Internal error. Please try again.")
 		}
 		SetCookie("token", token, c, time.Now().Add(time.Hour*24))
-		return a.renderTemplate(c, auth.ChangePass(data.Action, a.getData(c, "Change pass")))
+		a.Redis.Client.Set(a.Redis.Ctx, "emailVerified:"+data.Email, true, time.Minute*10)
+		c.Set("HX-Redirect", "/account/settings/change_pass")
+		return c.SendStatus(200)
 	case "change_pass":
-		return a.renderTemplate(c, auth.ChangePass(data.Action, a.getData(c, "Change pass")))
+		a.Redis.Client.Set(a.Redis.Ctx, "emailVerified:"+data.Email, true, time.Minute*10)
+		c.Set("HX-Redirect", "/account/settings/change_pass")
+		return c.SendStatus(200)
 	case "change_email":
 		newEmail, err := a.Redis.Client.Get(a.Redis.Ctx, "change_email:"+data.Email).Result()
 		if err != nil {
@@ -67,7 +70,7 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 		}
 
 		if err := a.Redis.SetUserCache(user); err != nil {
-			a.Redis.Log.Error("error set userCache", zap.Error(err))
+			a.Log.Error("error set userCache", zap.Error(err))
 		}
 		a.Redis.Client.Del(a.Redis.Ctx, "change_email:"+data.Email, "UserData:"+data.Email)
 		token, err := utils.NewToken(newEmail, "on", time.Hour*336)
