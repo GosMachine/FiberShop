@@ -12,7 +12,7 @@ func (s *Storage) DeleteItem(cart []models.CartItem, id string) ([]models.CartIt
 			break
 		}
 	}
-	err := s.db.First("id = ?", id).Delete(models.CartItem{}).Error
+	err := s.db.Where("id = ?", id).Delete(&models.CartItem{}).Error
 	if err != nil {
 		return nil, err
 	}

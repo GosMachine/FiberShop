@@ -38,7 +38,7 @@ func (s *Storage) CreateCoupon(code string, value float64, valueType models.Valu
 }
 
 func (s *Storage) DeleteCoupon(code string) error {
-	err := s.db.First("code = ?", code).Delete(models.Coupon{}).Error
+	err := s.db.Where("code = ?", code).Delete(&models.Coupon{}).Error
 	if err != nil {
 		return err
 	}
