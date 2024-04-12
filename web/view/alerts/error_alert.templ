@@ -2,7 +2,19 @@ package alerts
 
 import "FiberShop/web/view/layout"
 
-templ Error(name string, data layout.Data) {
+script hideAlert(button, containerId string) {
+    var button = document.getElementById(button);
+        button.disabled = true;
+        setTimeout(() => {
+            var alertContainer = document.getElementById(containerId)
+
+            alertContainer.removeAttribute('data-te-toast-show');
+            alertContainer.setAttribute('data-te-toast-hide', '');
+            button.disabled = false;
+        }, 5000);
+}
+
+templ Error(alert Alert,data layout.Data) {
     <div
             class="pointer-events-auto fixed bottom-5 right-5 max-w-sm mx-auto mb-4 hidden w-78 rounded-lg bg-danger-100 bg-clip-padding text-sm text-danger-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden"
             id="alert-error-container"
@@ -15,20 +27,10 @@ templ Error(name string, data layout.Data) {
         <div
                 class="flex items-center justify-between rounded-t-lg border-b-2 border-danger/20 bg-danger-100 bg-clip-padding px-4 pb-2 pt-2.5">
             <p class="flex items-center font-bold text-danger-700">
-                <span id="alert-error-name">{name}</span>
+                <span id="alert-error-name">{alert.Name}</span>
             </p>
         </div>
-        <div id="alert-error-message" class="break-words text-[1.1rem] rounded-b-lg bg-danger-100 px-4 py-4 text-danger-700">Send error.</div>
+        <div id="alert-error-message" class="break-words text-[1.1rem] rounded-b-lg bg-danger-100 px-4 py-4 text-danger-700">{alert.Message}</div>
     </div>
-    <script>
-        var submitButton = document.getElementById('submitBtn');
-        submitButton.disabled = true;
-        setTimeout(() => {
-            var alertContainer = document.getElementById('alert-success-container')
-
-            alertContainer.removeAttribute('data-te-toast-show');
-            alertContainer.setAttribute('data-te-toast-hide', '');
-            submitButton.disabled = false;
-        }, 5000);
-    </script>    
+    @hideAlert(alert.Button, "alert-error-container")
 }

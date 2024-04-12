@@ -2,7 +2,13 @@ package alerts
 
 import "FiberShop/web/view/layout"
 
-templ Success(name string,data layout.Data) {
+type Alert struct {
+    Name string
+    Message string
+    Button string
+}
+
+templ Success(alert Alert,data layout.Data) {
     <div
             class="pointer-events-auto fixed bottom-5 right-5 max-w-sm mx-auto mb-4 hidden w-78 rounded-lg bg-success-100 bg-clip-padding text-sm text-success-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden"
             id="alert-success-container"
@@ -15,20 +21,10 @@ templ Success(name string,data layout.Data) {
         <div
                 class="flex items-center justify-between rounded-t-lg border-b-2 border-success/20 bg-success-100 bg-clip-padding px-4 pb-2 pt-2.5">
             <p class="flex items-center font-bold text-success-700">
-                <span id="alert-success-name">{ name }</span>
+                <span id="alert-success-name">{ alert.Name }</span>
             </p>
         </div>
-        <div id="alert-success-message" class="break-words text-[1.1rem] rounded-b-lg bg-success-100 px-4 py-4 text-success-700">Successfully sent.</div>
+        <div id="alert-success-message" class="break-words text-[1.1rem] rounded-b-lg bg-success-100 px-4 py-4 text-success-700">{alert.Message}</div>
     </div>
-    <script>
-        var submitButton = document.getElementById('submitBtn');
-        submitButton.disabled = true;
-        setTimeout(() => {
-            var alertContainer = document.getElementById('alert-success-container')
-
-            alertContainer.removeAttribute('data-te-toast-show');
-            alertContainer.setAttribute('data-te-toast-hide', '');
-            submitButton.disabled = false;
-        }, 5000);
-    </script>
+    @hideAlert(alert.Button, "alert-success-container")
 }

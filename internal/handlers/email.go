@@ -119,7 +119,12 @@ func (a *Handle) HandleEmailResend(c *fiber.Ctx) error {
 		a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
 		a.sendEmail(email, code)
 	}(email)
-	return a.renderTemplate(c, alerts.Success("Code", a.getData(c, "Email")))
+	alert := alerts.Alert{
+		Name:    "Code",
+		Message: "Successfully sent",
+		Button:  "submitBtn",
+	}
+	return a.renderTemplate(c, alerts.Success(alert, a.getData(c, "Email")))
 }
 
 func (a *Handle) HandleEmail(c *fiber.Ctx) error {

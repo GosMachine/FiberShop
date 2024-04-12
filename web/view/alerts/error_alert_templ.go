@@ -12,7 +12,25 @@ import "bytes"
 
 import "FiberShop/web/view/layout"
 
-func Error(name string, data layout.Data) templ.Component {
+func hideAlert(button, containerId string) templ.ComponentScript {
+	return templ.ComponentScript{
+		Name: `__templ_hideAlert_bf82`,
+		Function: `function __templ_hideAlert_bf82(button, containerId){var button = document.getElementById(button);
+        button.disabled = true;
+        setTimeout(() => {
+            var alertContainer = document.getElementById(containerId)
+
+            alertContainer.removeAttribute('data-te-toast-show');
+            alertContainer.setAttribute('data-te-toast-hide', '');
+            button.disabled = false;
+        }, 5000);
+}`,
+		Call:       templ.SafeScript(`__templ_hideAlert_bf82`, button, containerId),
+		CallInline: templ.SafeScriptInline(`__templ_hideAlert_bf82`, button, containerId),
+	}
+}
+
+func Error(alert Alert, data layout.Data) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -30,15 +48,32 @@ func Error(name string, data layout.Data) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(alert.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/alerts/error_alert.templ`, Line: 18, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/alerts/error_alert.templ`, Line: 30, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></p></div><div id=\"alert-error-message\" class=\"break-words text-[1.1rem] rounded-b-lg bg-danger-100 px-4 py-4 text-danger-700\">Send error.</div></div><script>\n        var submitButton = document.getElementById('submitBtn');\n        submitButton.disabled = true;\n        setTimeout(() => {\n            var alertContainer = document.getElementById('alert-success-container')\n\n            alertContainer.removeAttribute('data-te-toast-show');\n            alertContainer.setAttribute('data-te-toast-hide', '');\n            submitButton.disabled = false;\n        }, 5000);\n    </script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></p></div><div id=\"alert-error-message\" class=\"break-words text-[1.1rem] rounded-b-lg bg-danger-100 px-4 py-4 text-danger-700\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(alert.Message)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/alerts/error_alert.templ`, Line: 33, Col: 139}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = hideAlert(alert.Button, "alert-error-container").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

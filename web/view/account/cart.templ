@@ -4,7 +4,25 @@ import (
     "FiberShop/web/view/layout"
     "FiberShop/internal/models"
 	"fmt"
+	"strconv"
 )
+
+script incrementQuantity(id string) {
+    var input = document.getElementById('quantityInput_' + id);
+    input.value = parseInt(input.value, 10) + 1;
+    updateTotalPrice(id)
+}
+
+script decrementQuantity(id string) {
+    var input = document.getElementById('quantityInput_' + id);
+    var newValue = parseInt(input.value, 10) - 1;
+    input.value = newValue >= 1 ? newValue : 1;
+    updateTotalPrice(id)
+}
+
+script updateTotalPrice(id string) {
+    updateTotalPrice(id)
+}
 
 templ Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64) {
     @layout.Base(data) {
@@ -47,30 +65,32 @@ templ Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64
             <!--                                </p>-->
                                         </div>
                                     </div>
-                                    // <div class="mt-6 mb-6 w-auto xl:mb-0 xl:mt-0">
-                                    //     <div class="flex items-center">
-                                    //         <div class="inline-flex items-center px-2 font-semibold border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700">
-                                    //             <button onclick="decrementQuantity({{ .ID }})" class="py-2 pr-2 border-r border-gray-300 dark:border-gray-600 dark:text-white hover:text-gray-400">
-                                    //                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
-                                    //                     <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path>
-                                    //                 </svg>
-                                    //             </button>
-                                    //             <input type="number" class="w-10 px-2 py-4 text-center border-0 rounded-md dark:bg-gray-800 bg-gray-50 dark:text-white" placeholder="1" value="{{ .Quantity }}" id="quantityInput_{{ .ID }}" minlength="1" min="1" data-price="{{ .Product.Price }}" oninput="updateTotalPrice({{ .ID }})">
-                                    //             <button onclick="incrementQuantity({{ .ID }})" class="py-2 pl-2 border-l border-gray-300 dark:border-gray-600 dark:text-white hover:text-gray-400">
-                                    //                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                    //                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
-                                    //                 </svg>
-                                    //             </button>
-                                    //         </div>
-                                    //     </div>
-                                    // </div>
-                                    // <div class="px-4 w-auto">
-                                    //     <span class="text-xl font-semibold text-emerald-500">
-                                    //         <span class="">$</span>
-                                    //         <span id="totalPrice_{{ .ID }}">{{ .TotalPrice }}</span>
-                                    //     </span>
-                                    // </div>
-                                    <a class="block items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0" href="#">Remove</a>
+                                    <div class="mt-6 mb-6 w-auto xl:mb-0 xl:mt-0">
+                                        <div class="flex items-center">
+                                            <div class="inline-flex items-center px-2 font-semibold border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700">
+                                                <button onclick={decrementQuantity(strconv.Itoa(int(item.ID)))} class="py-2 pr-2 border-r border-gray-300 dark:border-gray-600 dark:text-white hover:text-gray-400">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                                        <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path>
+                                                    </svg>
+                                                </button>
+                                                <input type="number" class="w-10 px-2 py-4 text-center border-0 rounded-md dark:bg-gray-800 bg-gray-50 dark:text-white" placeholder="1" value={ strconv.Itoa(int(item.Quantity)) } id={ fmt.Sprintf("quantityInput_%d", item.ID) } minlength="1" min="1" data-price={ fmt.Sprintf("%f", item.Product.Price) } oninput={updateTotalPrice(strconv.Itoa(int(item.ID)))} />
+                                                <button onclick={incrementQuantity(strconv.Itoa(int(item.ID)))} class="py-2 pl-2 border-l border-gray-300 dark:border-gray-600 dark:text-white hover:text-gray-400">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="px-4 w-auto">
+                                        <span class="text-xl font-semibold text-emerald-500">
+                                            <span class="">$</span>
+                                            <span id={ fmt.Sprintf("totalPrice_%d", item.ID) }>{ fmt.Sprintf("%.2f", item.Product.Price * float64(item.Quantity)) }</span>
+                                        </span>
+                                    </div>
+                                    <button id={fmt.Sprintf("remove"+strconv.Itoa(int(item.ID)))} hx-target="#alert" hx-post={ fmt.Sprintf("/account/cart/delete?id=%d", item.ID) } class="block items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">
+                                        Remove
+                                    </button>
                                 </div>
                             }
                         </div>
@@ -96,7 +116,7 @@ templ Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64
                                     <span>Subtotal</span>
                                     <span class="flex dark:text-gray-400 items-center text-xl">
                                             <span class="mr-2 text-base">$</span>
-                                            <span id="subTotalCartPrice">{ fmt.Sprintf("2.%f", totalCartPrice) }</span>
+                                            <span id="subTotalCartPrice">{ fmt.Sprintf("%.2f", totalCartPrice) }</span>
                                         </span>
                                 </div>
                                 <div
@@ -112,7 +132,7 @@ templ Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64
                                     <span>Total</span>
                                     <span class="flex items-center text-xl text-emerald-500">
                                             <span class="mr-2 text-base">$</span>
-                                            <span id="totalCartPrice">{ fmt.Sprintf("2.%f", totalCartPrice) }</span>
+                                            <span id="totalCartPrice">{ fmt.Sprintf("%.2f", totalCartPrice) }</span>
                                         </span>
                                 </div>
                                 <a class="block text-center mt-4 rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0" href="#">
@@ -125,5 +145,7 @@ templ Cart(data layout.Data, cartItems []models.CartItem, totalCartPrice float64
         </section>
         }
         @Base()
+        <script src="/js/cart.js"/>
     }
+    <div id="alert"></div>
 }

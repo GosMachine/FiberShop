@@ -12,7 +12,13 @@ import "bytes"
 
 import "FiberShop/web/view/layout"
 
-func Success(name string, data layout.Data) templ.Component {
+type Alert struct {
+	Name    string
+	Message string
+	Button  string
+}
+
+func Success(alert Alert, data layout.Data) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -30,15 +36,32 @@ func Success(name string, data layout.Data) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(alert.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/alerts/success_alert.templ`, Line: 18, Col: 52}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/alerts/success_alert.templ`, Line: 24, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></p></div><div id=\"alert-success-message\" class=\"break-words text-[1.1rem] rounded-b-lg bg-success-100 px-4 py-4 text-success-700\">Successfully sent.</div></div><script>\n        var submitButton = document.getElementById('submitBtn');\n        submitButton.disabled = true;\n        setTimeout(() => {\n            var alertContainer = document.getElementById('alert-success-container')\n\n            alertContainer.removeAttribute('data-te-toast-show');\n            alertContainer.setAttribute('data-te-toast-hide', '');\n            submitButton.disabled = false;\n        }, 5000);\n    </script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></p></div><div id=\"alert-success-message\" class=\"break-words text-[1.1rem] rounded-b-lg bg-success-100 px-4 py-4 text-success-700\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(alert.Message)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/alerts/success_alert.templ`, Line: 27, Col: 143}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = hideAlert(alert.Button, "alert-success-container").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

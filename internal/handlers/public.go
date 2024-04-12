@@ -56,6 +56,11 @@ func (a *Handle) HandleContact(c *fiber.Ctx) error {
 }
 
 func (a *Handle) HandleContactForm(c *fiber.Ctx) error {
+	alert := alerts.Alert{
+		Name:    "Ticket",
+		Message: "Successfully sent",
+		Button:  "submitBtn",
+	}
 	type contactForm struct {
 		Name    string `json:"name"`
 		Email   string `json:"email"`
@@ -64,11 +69,13 @@ func (a *Handle) HandleContactForm(c *fiber.Ctx) error {
 	var data contactForm
 	if err := c.BodyParser(&data); err != nil {
 		a.Log.Error("error create ticket", zap.Error(err))
-		return a.renderTemplate(c, alerts.Error("Ticket", a.getData(c, "Contact us")))
+		alert.Message = "Error create ticket"
+		return a.renderTemplate(c, alerts.Error(alert, a.getData(c, "Contact us")))
 	}
 	if err := a.Db.CreateTicket(data.Name, data.Email, data.Message, c.IP()); err != nil {
 		a.Log.Error("error create ticket", zap.Error(err))
-		return a.renderTemplate(c, alerts.Error("Ticket", a.getData(c, "Contact us")))
+		alert.Message = "Error create ticket"
+		return a.renderTemplate(c, alerts.Error(alert, a.getData(c, "Contact us")))
 	}
-	return a.renderTemplate(c, alerts.Success("Ticket", a.getData(c, "Contact us")))
+	return a.renderTemplate(c, alerts.Success(alert, a.getData(c, "Contact us")))
 }

@@ -29,20 +29,6 @@ func (a *Handle) HandleAccountSettings(c *fiber.Ctx) error {
 	return a.renderTemplate(c, account.Settings(user.EmailVerified, a.getData(c, "Settings")))
 }
 
-func (a *Handle) HandleAccountCart(c *fiber.Ctx) error {
-	email, _ := utils.IsTokenValid(c.Cookies("token"))
-	user, err := a.Redis.GetUserCache(email)
-	if err != nil {
-		a.Log.Error("error get user cache", zap.Error(err))
-	}
-	var totalCartPrice float64
-	for _, v := range user.Cart.CartItems {
-		totalCartPrice += v.TotalPrice
-	}
-
-	return a.renderTemplate(c, account.Cart(a.getData(c, "Your Cart"), user.Cart.CartItems, totalCartPrice))
-}
-
 func (a *Handle) HandleAccountVerification(c *fiber.Ctx) error {
 	email1 := c.FormValue("email")
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
