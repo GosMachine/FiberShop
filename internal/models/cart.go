@@ -6,6 +6,7 @@ import (
 
 type CartItem struct {
 	gorm.Model
+	ID        int
 	UserID    int
 	Product   Product `gorm:"foreignKey:ProductID"`
 	ProductID int

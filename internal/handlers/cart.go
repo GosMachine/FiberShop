@@ -44,5 +44,7 @@ func (a *Handle) HandleDeleteItem(c *fiber.Ctx) error {
 	if err := a.Redis.SetUserCache(user); err != nil {
 		a.Log.Error("error set user cache", zap.Error(err))
 	}
-	return c.SendStatus(200)
+	c.Set("HX-Retarget", "#item"+id)
+	c.Set("HX-Reswap", "outerHTML")
+	return c.SendString(`<script>updateTotalCartPrice();</script>`)
 }

@@ -3,20 +3,23 @@ package main
 import (
 	"FiberShop/internal/app"
 	"FiberShop/internal/config"
-	"FiberShop/internal/lib/logger"
 	"FiberShop/internal/transport/grpc/auth"
 	"context"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 func main() {
-
+	if err := godotenv.Load(); err != nil {
+		panic(err)
+	}
 	cfg := config.MustLoad()
-	log := logger.SetupLogger(cfg.Env)
+	log := setupLogger()
 	log.Info("starting application", zap.Any("config", cfg))
 	authClient, err := auth.New(context.Background(), cfg.Clients.Auth.Address,
 		cfg.Clients.Auth.Timeout, cfg.Clients.Auth.RetriesCount)
@@ -34,8 +37,20 @@ func main() {
 	log.Info("application stopped")
 }
 
+func setupLogger() *zap.Logger {
+	cfg := zap.Config{
+		Encoding:          "json",
+		DisableStacktrace: true,
+		Level:             zap.NewAtomicLevelAt(zapcore.InfoLevel),
+		OutputPaths:       []string{"stdout"},
+		EncoderConfig:     zap.NewProductionEncoderConfig(),
+	}
+	logger, _ := cfg.Build()
+	defer logger.Sync()
+	return logger
+}
+
+//todo microservices
 //TODO оптимизировать(горутины, скорость и т.д)
 //TODO оптимизировать сервис аутх(кэш и т.д)
-//TODO error alert(не факт)
 //TODO добавить ссылку для восстановления пароля
-//todo add htmx, rename html to tmpl, and optimize css

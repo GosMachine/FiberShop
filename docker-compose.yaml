@@ -4,12 +4,10 @@ services:
     image: postgres
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: FiberShop
     networks:
       - shop
+    env_file:
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -17,13 +15,14 @@ services:
     image: dpage/pgadmin4
     ports:
       - "80:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
     depends_on:
       - postgres
     networks:
       - shop
+    env_file:
+      - .env
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin/data
 
   redis:
     image: redis
@@ -36,16 +35,12 @@ services:
   
   auth:
     image: gosmach1ne/serviceauth
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_HOST: postgres
-      POSTGRES_DB: FiberShop
-      POSTGRES_PORT: 5432
     ports:
       - "44043:44043"
     networks:
       - shop
+    env_file:
+      - .env
     depends_on:
       - postgres
 networks:
@@ -54,3 +49,4 @@ networks:
 volumes:
   postgres_data:
   redis_data:
+  pgadmin_data:

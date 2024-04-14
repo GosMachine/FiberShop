@@ -1,5 +1,6 @@
+var percentage = 0;
+
 function updateTotalPrice(id) {
-    var percentage = 0;
     var input = document.getElementById('quantityInput_' + id);
     var totalPriceElement = document.getElementById('totalPrice_' + id);
 
@@ -9,7 +10,10 @@ function updateTotalPrice(id) {
     var totalPrice = quantity * price;
     totalPriceElement.textContent = totalPrice.toFixed(2);
 
+    updateTotalCartPrice()
+}
 
+function updateTotalCartPrice() {
     var subTotalCartPriceElement = document.getElementById('subTotalCartPrice');
     var totalCartPriceElement = document.getElementById('totalCartPrice');
     var totalCartPrice = 0;

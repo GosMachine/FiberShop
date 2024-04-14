@@ -28,6 +28,8 @@ func accountRoutes(a *fiber.App, middle *middleware.App, handle *handlers.Handle
 
 func couponRoutes(a *fiber.App, middle *middleware.App, handle *handlers.Handle) {
 	coupon := a.Group("/coupon")
+	coupon.Use(middle.IsAuthenticated)
+	//todo middleware for coupons (valid check)
 	coupon.Post("/discount", handle.HandleDiscountCoupon)
 	coupon.Post("/gift", handle.HandleGiftCoupon)
 }

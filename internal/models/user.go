@@ -10,7 +10,6 @@ type User struct {
 	ID            int    `gorm:"primary_key"`
 	Email         string `gorm:"unique"`
 	EmailVerified bool
-	Balance       float64
 	PassHash      []byte
 	IpCreated     string
 	LastLoginIp   string

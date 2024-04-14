@@ -13,7 +13,6 @@ import "bytes"
 type Data struct {
 	Title   string
 	Viewers string
-	Balance string
 	Email   string
 }
 
@@ -37,7 +36,7 @@ func Base(data Data) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(data.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/layout/base.templ`, Line: 15, Col: 24}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/layout/base.templ`, Line: 14, Col: 24}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -48,20 +47,7 @@ func Base(data Data) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if data.Email != "" {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!-- Cart Icon --> <a class=\"mr-4 text-neutral-600 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&amp;.active]:text-black/90 dark:[&amp;.active]:text-neutral-400\" href=\"/account/cart\"><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"w-7 h-7\"><path d=\"M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z\"></path></svg></a><form action=\"/account/logout\" method=\"post\"><button type=\"submit\" class=\"inline-flex items-center mr-4 rounded border-emerald-500 text-emerald-500 hover:border-emerald-600 hover:bg-emerald-400 hover:bg-opacity-10 hover:text-emerald-600 focus:border-emerald-700 focus:text-emerald-400 active:border-emerald-800 active:text-emerald-800 dark:border-emerald-300 dark:text-emerald-300 dark:hover:hover:text-white px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0 flex-row-reverse\"><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"w-6 h-6 ml-2\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15\"></path></svg> Logout</button></form><a href=\"/account\" role=\"button\" class=\"inline-flex items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0\">Account ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(data.Balance)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/layout/base.templ`, Line: 205, Col: 628}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("$</a>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!-- Cart Icon --> <a class=\"mr-4 text-neutral-600 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&amp;.active]:text-black/90 dark:[&amp;.active]:text-neutral-400\" href=\"/account/cart\"><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"w-7 h-7\"><path d=\"M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z\"></path></svg></a><form action=\"/account/logout\" method=\"post\"><button type=\"submit\" class=\"inline-flex items-center mr-4 rounded border-emerald-500 text-emerald-500 hover:border-emerald-600 hover:bg-emerald-400 hover:bg-opacity-10 hover:text-emerald-600 focus:border-emerald-700 focus:text-emerald-400 active:border-emerald-800 active:text-emerald-800 dark:border-emerald-300 dark:text-emerald-300 dark:hover:hover:text-white px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0 flex-row-reverse\"><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"w-6 h-6 ml-2\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15\"></path></svg> Logout</button></form><a href=\"/account\" role=\"button\" class=\"inline-flex items-center rounded bg-emerald-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-emerald-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-emerald-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-emerald-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-3 pb-2 pt-2.5 text-[0.9rem] font-bold uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0\">Account</a>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -83,12 +69,12 @@ func Base(data Data) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(data.Viewers)
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(data.Viewers)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/layout/base.templ`, Line: 298, Col: 44}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/layout/base.templ`, Line: 297, Col: 44}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

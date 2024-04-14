@@ -10,6 +10,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
+	github.com/joho/godotenv v1.5.1
 	github.com/markbates/goth v1.79.0
 	github.com/redis/go-redis/v9 v9.5.1
 	github.com/shareed2k/goth_fiber v0.3.0
@@ -38,7 +39,6 @@ require (
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/klauspost/compress v1.17.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
