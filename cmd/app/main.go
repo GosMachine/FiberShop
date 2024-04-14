@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
@@ -44,6 +45,9 @@ func setupLogger() *zap.Logger {
 		Level:             zap.NewAtomicLevelAt(zapcore.InfoLevel),
 		OutputPaths:       []string{"stdout"},
 		EncoderConfig:     zap.NewProductionEncoderConfig(),
+	}
+	cfg.EncoderConfig.EncodeTime = func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+		enc.AppendString(t.Format("2006-01-02 15:04:05"))
 	}
 	logger, _ := cfg.Build()
 	defer logger.Sync()

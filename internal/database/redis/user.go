@@ -3,8 +3,10 @@ package redis
 import (
 	"FiberShop/internal/models"
 	"FiberShop/internal/utils"
-	"go.uber.org/zap"
+	"encoding/json"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 func (r *Redis) SetUserCache(user models.User) error {
@@ -44,5 +46,22 @@ func (r *Redis) getUserFromDb(email string) (models.User, error) {
 		r.Log.Error("error set userCache", zap.Error(err))
 	}
 	r.Log.Info("userData from postgres", zap.String("email", email))
+	return user, nil
+}
+
+func encodeUserData(user models.User) (string, error) {
+	data, err := json.Marshal(user)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+func decodeUserData(data string) (models.User, error) {
+	var user models.User
+	err := json.Unmarshal([]byte(data), &user)
+	if err != nil {
+		return models.User{}, err
+	}
 	return user, nil
 }

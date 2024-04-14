@@ -41,3 +41,14 @@ func (a *Handle) HandleDiscountCoupon(c *fiber.Ctx) error {
 func (a *Handle) HandleGiftCoupon(c *fiber.Ctx) error {
 	return c.Redirect("/")
 }
+
+// func applyCoupon(totalPrice float64, coupon *models.Coupon) float64 {
+// 	switch coupon.ValueType {
+// 	case models.FixedAmount:
+// 		return totalPrice - coupon.Value
+// 	case models.Percentage:
+// 		return totalPrice * (1 - coupon.Value)
+// 	default:
+// 		return totalPrice
+// 	}
+// }
