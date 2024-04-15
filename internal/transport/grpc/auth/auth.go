@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	authv1 "github.com/GosMachine/protos/gen/go/auth"
 	grpcretry "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/retry"
 	"google.golang.org/grpc"
@@ -15,13 +14,7 @@ type Client struct {
 	api authv1.AuthClient
 }
 
-func New(
-	ctx context.Context,
-	addr string,
-	timeout int,
-	retriesCount int,
-) (*Client, error) {
-	const op = "grpc.auth.New"
+func New(ctx context.Context, addr string, timeout int, retriesCount int) (*Client, error) {
 	retryOpts := []grpcretry.CallOption{
 		grpcretry.WithCodes(codes.NotFound, codes.Aborted, codes.DeadlineExceeded),
 		grpcretry.WithMax(uint(retriesCount)),
@@ -33,7 +26,7 @@ func New(
 			grpcretry.UnaryClientInterceptor(retryOpts...),
 		))
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", op, err)
+		return nil, err
 	}
 
 	grpcClient := authv1.NewAuthClient(cc)

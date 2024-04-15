@@ -1,12 +1,10 @@
 package handlers
 
 import (
-	"FiberShop/internal/utils"
-	"FiberShop/web/view/alerts"
 	"FiberShop/web/view/auth"
-	"FiberShop/web/view/contact"
 	"FiberShop/web/view/index"
 	"FiberShop/web/view/layout"
+	"context"
 	"math/rand"
 	"strconv"
 	"time"
@@ -20,11 +18,11 @@ func (a *Handle) HandleHome(c *fiber.Ctx) error {
 }
 
 func (a *Handle) HandleAccountRecovery(c *fiber.Ctx) error {
-	email, _ := utils.IsTokenValid(c.Cookies("token"))
-	if email != "" {
+	data := a.getData(c, "Account recovery")
+	if data.Email != "" {
 		return c.Redirect("/")
 	}
-	return a.renderTemplate(c, auth.Recovery(a.getData(c, "Account recovery")))
+	return a.renderTemplate(c, auth.Recovery(data))
 }
 
 func (a *Handle) HandleAccountRecoveryForm(c *fiber.Ctx) error {
@@ -33,14 +31,14 @@ func (a *Handle) HandleAccountRecoveryForm(c *fiber.Ctx) error {
 		a.Log.Error("bodyParse error", zap.Error(err))
 		return c.SendString("Internal error. Please try again.")
 	}
-	_, err := a.Db.User(data.Email)
+	_, err := a.Client.EmailVerified(context.Background(), data.Email)
 	if err != nil {
 		a.Log.Error("account_recovery error", zap.Error(err))
 		return c.SendString("User is not found")
 	}
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
+	a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+data.Email, code, time.Minute*10)
 	go func(email string) {
-		a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
 		a.sendEmail(email, code)
 	}(data.Email)
 	c.Set("HX-Redirect", "/email?action=account_recovery&address="+data.Email)
@@ -49,33 +47,4 @@ func (a *Handle) HandleAccountRecoveryForm(c *fiber.Ctx) error {
 
 func (a *Handle) HandleNotFound(c *fiber.Ctx) error {
 	return a.renderTemplate(c, layout.NotFound(a.getData(c, "Page not found")))
-}
-
-func (a *Handle) HandleContact(c *fiber.Ctx) error {
-	return a.renderTemplate(c, contact.Show(a.getData(c, "Contact us")))
-}
-
-func (a *Handle) HandleContactForm(c *fiber.Ctx) error {
-	alert := alerts.Alert{
-		Name:    "Ticket",
-		Message: "Successfully sent",
-		Button:  "submitBtn",
-	}
-	type contactForm struct {
-		Name    string `json:"name"`
-		Email   string `json:"email"`
-		Message string `json:"message"`
-	}
-	var data contactForm
-	if err := c.BodyParser(&data); err != nil {
-		a.Log.Error("error create ticket", zap.Error(err))
-		alert.Message = "Error create ticket"
-		return a.renderTemplate(c, alerts.Error(alert, a.getData(c, "Contact us")))
-	}
-	if err := a.Db.CreateTicket(data.Name, data.Email, data.Message, c.IP()); err != nil {
-		a.Log.Error("error create ticket", zap.Error(err))
-		alert.Message = "Error create ticket"
-		return a.renderTemplate(c, alerts.Error(alert, a.getData(c, "Contact us")))
-	}
-	return a.renderTemplate(c, alerts.Success(alert, a.getData(c, "Contact us")))
 }

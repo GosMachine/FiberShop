@@ -2,7 +2,6 @@ package layout
 
 type Data struct {
     Title string
-    Viewers string
     Email string
 }
 
@@ -291,10 +290,6 @@ templ Base(data Data) {
                     </svg>
                 </a>
             </div>
-        </div>
-        <div
-                class="w-full pt-4 text-center text-neutral-700  dark:text-neutral-200">
-            Page viewers count:{data.Viewers}.
         </div>
         <!--Copyright section-->
         <div

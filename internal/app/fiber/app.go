@@ -11,6 +11,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/google"
 	"go.uber.org/zap"
@@ -30,8 +31,11 @@ func New(log *zap.Logger, authClient *auth.Client, db *postgres.Storage, redis *
 	handle := handlers.New(log, authClient, db, redis)
 	app.Use(cors.New())
 	app.Static("/", "./web/static")
-	app.Use(middle.Logger)
-	routes.SetupRoutes(app, handle, middle)
+	// app.Use(middle.Logger)
+	//test fiber logger
+	app.Use(app.Use(logger.New(logger.ConfigDefault)))
+	routes := routes.New(app, handle, middle)
+	routes.SetupRoutes()
 	app.Use(handle.HandleNotFound)
 	return &App{app: app, log: log}
 }
