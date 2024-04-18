@@ -5,13 +5,15 @@ import (
 	"FiberShop/web/view/alerts"
 	"FiberShop/web/view/email"
 	"FiberShop/web/view/layout"
-	"fmt"
+	"context"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
+	"gopkg.in/gomail.v2"
 )
 
 func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
@@ -37,27 +39,12 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 		go func(email string) {
 			a.emailVerification(email)
 		}(data.Email)
-	case "account_recovery":
-		token, err := utils.NewToken(data.Email, "", time.Hour*24)
-		if err != nil {
-			a.Log.Error("error create newToken", zap.Error(err))
-			return c.SendString("Internal error. Please try again.")
-		}
-		SetCookie("token", token, c, time.Now().Add(time.Hour*24))
-		a.Redis.Client.Set(a.Redis.Ctx, "emailVerified:"+data.Email, true, time.Minute*10)
-		c.Set("HX-Redirect", "/account/settings/change_pass")
-		go func() {
-			a.sendEmail(data.Email, "password successfully changed")
-		}()
-		return c.SendStatus(200)
 	case "change_pass":
-		a.Redis.Client.Set(a.Redis.Ctx, "emailVerified:"+data.Email, true, time.Minute*10)
+		a.Redis.Client.Set(a.Redis.Ctx, "emailAccess:"+data.Email, true, time.Minute*10)
 		c.Set("HX-Redirect", "/account/settings/change_pass")
-		go func() {
-			a.sendEmail(data.Email, "password successfully changed")
-		}()
 		return c.SendStatus(200)
 	case "change_email":
+		//todo продолжить тут
 		newEmail, err := a.Redis.Client.Get(a.Redis.Ctx, "change_email:"+data.Email).Result()
 		if err != nil {
 			a.Log.Error("error get newEmail", zap.Error(err))
@@ -95,19 +82,11 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 }
 
 func (a *Handle) emailVerification(email string) {
-	user, err := a.Redis.GetUserCache(email)
-	fmt.Println(email)
-	if err != nil {
-		a.Log.Error("error get user cache", zap.Error(err))
+	if err := a.Client.EmailVerify(context.Background(), email); err != nil {
+		a.Log.Error("error verify email", zap.Error(err))
 		return
 	}
-	user.EmailVerified = true
-	err = a.Db.UpdateUser(user)
-	if err != nil {
-		a.Log.Error("error update user", zap.Error(err))
-		return
-	}
-	if err := a.Redis.SetUserCache(user); err != nil {
+	if err := a.Redis.SetEmailVerifiedCache(email, true); err != nil {
 		a.Log.Error("error set userCache", zap.Error(err))
 	}
 }
@@ -115,10 +94,8 @@ func (a *Handle) emailVerification(email string) {
 func (a *Handle) HandleEmailResend(c *fiber.Ctx) error {
 	email := c.FormValue("email")
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
-	go func(email string) {
-		a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
-		a.sendEmail(email, code)
-	}(email)
+	a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
+	go a.sendEmail(email, code)
 	alert := alerts.Alert{
 		Name:    "Code",
 		Message: "Successfully sent",
@@ -134,4 +111,18 @@ func (a *Handle) HandleEmail(c *fiber.Ctx) error {
 		return a.renderTemplate(c, email.Show(email1, action, a.getData(c, "Email")))
 	}
 	return a.renderTemplate(c, layout.NotFound(a.getData(c, "Page not found")))
+}
+
+func (a *Handle) sendEmail(email, msg string) {
+	message := gomail.NewMessage()
+	message.SetHeader("From", "support@fiber.shop")
+	message.SetHeader("To", email)
+	message.SetHeader("Subject", "FiberShop")
+	message.SetBody("text/plain", msg)
+	dialer := gomail.NewDialer("smtp.gmail.com", 587, os.Getenv("EMAIL_NAME"), os.Getenv("EMAIL_PASS"))
+	if err := dialer.DialAndSend(message); err != nil {
+		a.Log.Error("error send email "+email, zap.Error(err))
+		return
+	}
+	a.Log.Info("send email success", zap.String("email", email))
 }

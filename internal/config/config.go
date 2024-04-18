@@ -13,7 +13,7 @@ type Config struct {
 }
 
 type HTTPServer struct {
-	Address string `yaml:"address" env-default:"localhost:8080"`
+	Address string `yaml:"address" env-default:"localhost:3000"`
 }
 
 type Client struct {

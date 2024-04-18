@@ -4,10 +4,10 @@ import (
 	"FiberShop/internal/database/postgres"
 	"FiberShop/internal/database/redis"
 	"FiberShop/internal/transport/grpc/auth"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
-	"gopkg.in/gomail.v2"
-	"time"
 )
 
 type Handle struct {
@@ -29,18 +29,4 @@ func SetCookie(name, value string, c *fiber.Ctx, expires time.Time) {
 		Expires: expires,
 	}
 	c.Cookie(&cookie)
-}
-
-func (a *Handle) sendEmail(email, msg string) {
-	message := gomail.NewMessage()
-	message.SetHeader("From", "support@fiber.shop")
-	message.SetHeader("To", email)
-	message.SetHeader("Subject", "FiberShop")
-	message.SetBody("text/plain", msg)
-	dialer := gomail.NewDialer("smtp.gmail.com", 587, "masterok6000@gmail.com", "atgtullwzawcfexa")
-	if err := dialer.DialAndSend(message); err != nil {
-		a.Log.Error("error send email "+email, zap.Error(err))
-		return
-	}
-	a.Log.Info("send email success", zap.String("email", email))
 }

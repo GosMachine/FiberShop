@@ -5,6 +5,7 @@ import (
 	"FiberShop/internal/middleware"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/shareed2k/goth_fiber"
 )
 
@@ -25,6 +26,7 @@ func (r *Routes) SetupRoutes() {
 
 func (r *Routes) setupPublicRoutes() {
 	r.app.Get("/", r.handle.HandleHome)
+	r.app.Get("/metrics", monitor.New())
 	r.app.Post("/email/resend", r.handle.HandleEmailResend)
 	r.app.Post("/email", r.handle.HandleEmailForm)
 	r.app.Get("/email", r.handle.HandleEmail)
@@ -71,3 +73,5 @@ func (r *Routes) couponRoutes() {
 	coupon.Post("/discount", r.handle.HandleDiscountCoupon)
 	coupon.Post("/gift", r.handle.HandleGiftCoupon)
 }
+
+//todo admin group

@@ -6,6 +6,7 @@ import (
 	"FiberShop/web/view/auth"
 	"FiberShop/web/view/email"
 	"FiberShop/web/view/layout"
+	"context"
 	"math/rand"
 	"strconv"
 	"time"
@@ -46,11 +47,9 @@ func (a *Handle) HandleSettingsChangeEmail(c *fiber.Ctx) error {
 		return c.SendString("Email already used.")
 	}
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
-	go func(email string) {
-		a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
-		a.Redis.Client.Set(a.Redis.Ctx, "change_email:"+email, newEmail, time.Minute*10)
-		a.sendEmail(email, code)
-	}(email1)
+	a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email1, code, time.Minute*10)
+	a.Redis.Client.Set(a.Redis.Ctx, "change_email:"+email1, newEmail, time.Minute*10)
+	go a.sendEmail(email1, code)
 	c.Set("HX-Redirect", "/email?action=change_email&address="+email1)
 	return c.SendStatus(200)
 }
@@ -58,16 +57,14 @@ func (a *Handle) HandleSettingsChangeEmail(c *fiber.Ctx) error {
 func (a *Handle) HandleSettingsChangePass(c *fiber.Ctx) error {
 	email1 := c.FormValue("email")
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
-	go func(email string) {
-		a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
-		a.sendEmail(email, code)
-	}(email1)
+	a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
+	go a.sendEmail(email1, code)
 	return c.Redirect("/email?action=change_pass&address=" + email1)
 }
 
 func (a *Handle) HandleChangePass(c *fiber.Ctx) error {
 	email1, _ := utils.IsTokenValid(c.Cookies("token"))
-	exist := a.Redis.Client.Exists(a.Redis.Ctx, "emailVerified:"+email1).Val()
+	exist := a.Redis.Client.Exists(a.Redis.Ctx, "emailAccess:"+email1).Val()
 	if exist != 1 {
 		return a.renderTemplate(c, layout.NotFound(a.getData(c, "Page not found")))
 	}
@@ -75,35 +72,23 @@ func (a *Handle) HandleChangePass(c *fiber.Ctx) error {
 }
 
 func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {
-	pass := c.FormValue("password")
-	confirmPassword := c.FormValue("confirmPassword")
-	email1 := c.FormValue("email")
-	if pass != confirmPassword || pass == "" || len(pass) < 8 {
-		return c.SendString("Password does not match or less than 8 characters.")
-	}
-	passHash, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.MinCost)
-	if err != nil {
-		a.Log.Error("failed to generate password hash", zap.Error(err))
+	var data RequestData
+	if err := c.BodyParser(&data); err != nil {
+		a.Log.Error("bodyParse error", zap.Error(err))
 		return c.SendString("Internal error. Please try again.")
 	}
-	user, err := a.Redis.GetUserCache(email1)
+	if data.Password != data.ConfirmPassword {
+		return c.SendString("Password mismatch.")
+	}
+	token, err := a.Client.ChangePass(context.Background(), data.Email, data.Password, c.IP())
 	if err != nil {
-		a.Log.Error("failed to get user cache", zap.Error(err))
+		a.Log.Error("changePass api client error", zap.Error(err))
 		return c.SendString("Internal error. Please try again.")
 	}
-	user.PassHash = passHash
-	user.LastLoginIp = c.IP()
-	user.LastLoginDate = time.Now()
-	err = a.Db.UpdateUser(user)
-	if err != nil {
-		a.Log.Error("failed to update user", zap.Error(err))
-		return c.SendString("Internal error. Please try again.")
-	}
-	if err := a.Redis.SetUserCache(user); err != nil {
-		a.Log.Error("error set userCache", zap.Error(err))
-	}
-	a.Redis.Client.Del(a.Redis.Ctx, "emailVerified:"+email1)
-	a.Log.Info("password changed successfully", zap.String("email", email1))
+	SetCookie("token", token, c, time.Now().Add(30*24*time.Hour))
+	a.Redis.Client.Del(a.Redis.Ctx, "emailAccess:"+data.Email)
+	a.Log.Info("password changed successfully", zap.String("email", data.Email))
+	go a.sendEmail(data.Email, "password successfully changed")
 	c.Set("HX-Redirect", "/account")
 	return c.SendStatus(200)
 }

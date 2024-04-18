@@ -4,7 +4,6 @@ import (
 	"FiberShop/web/view/auth"
 	"FiberShop/web/view/index"
 	"FiberShop/web/view/layout"
-	"context"
 	"math/rand"
 	"strconv"
 	"time"
@@ -26,22 +25,16 @@ func (a *Handle) HandleAccountRecovery(c *fiber.Ctx) error {
 }
 
 func (a *Handle) HandleAccountRecoveryForm(c *fiber.Ctx) error {
-	var data RequestData
-	if err := c.BodyParser(&data); err != nil {
-		a.Log.Error("bodyParse error", zap.Error(err))
-		return c.SendString("Internal error. Please try again.")
-	}
-	_, err := a.Client.EmailVerified(context.Background(), data.Email)
+	email := c.FormValue("email")
+	_, err := a.Redis.GetEmailVerifiedCache(email)
 	if err != nil {
 		a.Log.Error("account_recovery error", zap.Error(err))
 		return c.SendString("User is not found")
 	}
 	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
-	a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+data.Email, code, time.Minute*10)
-	go func(email string) {
-		a.sendEmail(email, code)
-	}(data.Email)
-	c.Set("HX-Redirect", "/email?action=account_recovery&address="+data.Email)
+	a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
+	go a.sendEmail(email, code)
+	c.Set("HX-Redirect", "/email?action=change_pass&address="+email)
 	return c.SendStatus(200)
 }
 
