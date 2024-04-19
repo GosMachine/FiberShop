@@ -22,11 +22,24 @@ func (c *Client) EmailVerify(ctx context.Context, email string) error {
 	return err
 }
 
-func (c *Client) ChangePass(ctx context.Context, email, password, ip string) (string, error) {
+func (c *Client) ChangeEmail(ctx context.Context, email, newEmail, oldToken string) (string, error) {
+	resp, err := c.api.ChangeEmail(ctx, &authv1.ChangeEmailRequest{
+		Email:    email,
+		NewEmail: newEmail,
+		OldToken: oldToken,
+	})
+	if err != nil {
+		return "", err
+	}
+	return resp.Token, nil
+}
+
+func (c *Client) ChangePass(ctx context.Context, email, password, ip, oldToken string) (string, error) {
 	resp, err := c.api.ChangePass(ctx, &authv1.ChangePassRequest{
 		Email:    email,
 		Password: password,
 		IP:       ip,
+		OldToken: oldToken,
 	})
 	if err != nil {
 		return "", err
@@ -45,6 +58,13 @@ func (c *Client) Login(ctx context.Context, email, password, ip, rememberMe stri
 		return "", err
 	}
 	return resp.Token, nil
+}
+
+func (c *Client) Logout(ctx context.Context, token string) error {
+	_, err := c.api.Logout(ctx, &authv1.LogoutRequest{
+		Token: token,
+	})
+	return err
 }
 
 func (c *Client) Register(ctx context.Context, email, password, ip, rememberMe string) (string, error) {

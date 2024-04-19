@@ -54,7 +54,7 @@ func (r *Routes) setupProtectedRoutes() {
 func (r *Routes) accountRoutes() {
 	account := r.app.Group("/account")
 	account.Use(r.middle.IsAuthenticated)
-	account.Post("/logout", handlers.HandleLogout)
+	account.Post("/logout", r.handle.HandleLogout)
 	account.Post("/change_pass", r.handle.HandleChangePassForm)
 	account.Get("/", r.handle.HandleAccount)
 	account.Get("/settings", r.handle.HandleAccountSettings)

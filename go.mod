@@ -3,7 +3,7 @@ module FiberShop
 go 1.22
 
 require (
-	github.com/GosMachine/protos v0.3.6
+	github.com/GosMachine/protos v0.4.1
 	github.com/a-h/templ v0.2.663
 	github.com/gofiber/fiber/v2 v2.52.4
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
@@ -26,7 +26,6 @@ require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect

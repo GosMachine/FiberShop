@@ -1,11 +1,8 @@
 package handlers
 
 import (
-	"FiberShop/internal/utils"
 	"FiberShop/web/view/auth"
 	"context"
-	"math/rand"
-	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +20,7 @@ type RequestData struct {
 }
 
 func (a *Handle) HandleLogin(c *fiber.Ctx) error {
-	email, _ := utils.IsTokenValid(c.Cookies("token"))
+	email := a.Redis.GetToken(c.Cookies("token"))
 	if email != "" {
 		return c.Redirect("/")
 	}
@@ -31,7 +28,7 @@ func (a *Handle) HandleLogin(c *fiber.Ctx) error {
 }
 
 func (a *Handle) HandleRegister(c *fiber.Ctx) error {
-	email, _ := utils.IsTokenValid(c.Cookies("token"))
+	email := a.Redis.GetToken(c.Cookies("token"))
 	if email != "" {
 		return c.Redirect("/")
 	}
@@ -46,8 +43,9 @@ func (a *Handle) HandleRegisterForm(c *fiber.Ctx) error {
 	return a.auth(c, "register")
 }
 
-func HandleLogout(c *fiber.Ctx) error {
-	SetCookie("token", "delete", c, time.Now().Add(-1*time.Second))
+func (a *Handle) HandleLogout(c *fiber.Ctx) error {
+	go a.Client.Logout(context.Background(), c.Cookies("token"))
+	c.Cookie(&fiber.Cookie{Name: "token", Secure: true, Value: "delete", Expires: time.Now().Add(-1 * time.Second)})
 	return c.Redirect("/")
 }
 
@@ -68,7 +66,7 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		}
 		token, err = a.Client.Register(context.Background(), data.Email, data.Password, c.IP(), data.Remember)
 	case "login":
-		token, err = a.Client.Login(context.Background(), data.Email, data.Password, c.IP(), data.Remember, "default")
+		token, err = a.Client.Login(context.Background(), data.Email, data.Password, c.IP(), data.Remember)
 	}
 	if err != nil {
 		if st, ok := status.FromError(err); ok {
@@ -80,20 +78,12 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 				return c.SendString("User already exists.")
 			}
 		}
-		a.Log.Error("login error", zap.Error(err))
+		a.Log.Error("auth error", zap.Error(err))
 		return c.SendString("Internal error. Please try again.")
 	}
-	expires := time.Now().Add(time.Hour * 24)
-	if data.Remember == "on" {
-		expires = time.Now().Add(time.Hour * 336)
-	}
-	SetCookie("token", token, c, expires)
+	c.Cookie(&fiber.Cookie{Name: "token", Secure: true, Value: token, Expires: time.Now().Add(a.Redis.GetTokenTTL(token))})
 	if action == "register" {
-		code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
-		go func(data RequestData) {
-			a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+data.Email, code, time.Minute*10)
-			a.sendEmail(data.Email, code)
-		}(data)
+		a.sendVerificationCode(data.Email)
 		c.Set("HX-Redirect", "/email?action=email_verification&address="+data.Email)
 		return c.SendStatus(200)
 	}
@@ -105,15 +95,13 @@ func (a *Handle) HandleOAuthCallback(c *fiber.Ctx) error {
 	user, err := goth_fiber.CompleteUserAuth(c)
 	if err != nil {
 		a.Log.Error("login error", zap.Error(err))
-		return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
+		return c.SendString("Internal error. Please try again.")
 	}
-	token, err := a.Client.Login(context.Background(), user.Email, "", c.IP(), "on", "OAuth")
+	token, err := a.Client.OAuth(context.Background(), user.Email, c.IP())
 	if err != nil {
 		a.Log.Error("login error", zap.Error(err))
-		return c.Status(fiber.StatusInternalServerError).SendString("Internal error. Please try again.")
+		return c.SendString("Internal error. Please try again.")
 	}
-	expires := time.Now().Add(time.Hour * 336)
-
-	SetCookie("token", token, c, expires)
+	c.Cookie(&fiber.Cookie{Name: "token", Secure: true, Value: token, Expires: time.Now().Add(a.Redis.GetTokenTTL(token))})
 	return c.Redirect("/")
 }

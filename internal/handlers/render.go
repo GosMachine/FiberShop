@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"FiberShop/internal/pkg/jwt"
 	"FiberShop/web/view/layout"
 	"fmt"
 	"time"
@@ -15,7 +14,7 @@ func (a *Handle) getData(c *fiber.Ctx, title string) layout.Data {
 	//todo в функциях где я получаю email, можно сначлао вызвыать getData и брать email оттуда
 	timeStart := time.Now()
 
-	email := jwt.IsTokenValid(c.Cookies("token"))
+	email := a.Redis.GetToken(c.Cookies("token"))
 
 	fmt.Println(time.Since(timeStart))
 

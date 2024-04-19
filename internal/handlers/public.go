@@ -4,10 +4,6 @@ import (
 	"FiberShop/web/view/auth"
 	"FiberShop/web/view/index"
 	"FiberShop/web/view/layout"
-	"math/rand"
-	"strconv"
-	"time"
-
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 )
@@ -31,9 +27,7 @@ func (a *Handle) HandleAccountRecoveryForm(c *fiber.Ctx) error {
 		a.Log.Error("account_recovery error", zap.Error(err))
 		return c.SendString("User is not found")
 	}
-	code := strconv.Itoa(rand.Intn(999999-100000+1) + 100000)
-	a.Redis.Client.Set(a.Redis.Ctx, "verificationCode:"+email, code, time.Minute*10)
-	go a.sendEmail(email, code)
+	a.sendVerificationCode(email)
 	c.Set("HX-Redirect", "/email?action=change_pass&address="+email)
 	return c.SendStatus(200)
 }

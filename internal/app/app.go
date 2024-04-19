@@ -17,7 +17,7 @@ func New(log *zap.Logger, authClient *auth.Client) *App {
 	if err != nil {
 		panic(err)
 	}
-	cache := redis.New(log, db)
+	cache := redis.New(log, authClient)
 	fiberApp := fiberapp.New(log, authClient, db, cache)
 	return &App{
 		FiberApp: fiberApp,

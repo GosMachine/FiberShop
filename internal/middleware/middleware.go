@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"FiberShop/internal/pkg/jwt"
+	"FiberShop/internal/database/redis"
 	"fmt"
 	"time"
 
@@ -10,7 +10,8 @@ import (
 )
 
 type App struct {
-	log *zap.Logger
+	log   *zap.Logger
+	redis *redis.Redis
 }
 
 func New(logger *zap.Logger) *App {
@@ -25,7 +26,7 @@ func (a *App) Logger(c *fiber.Ctx) error {
 }
 
 func (a *App) IsAuthenticated(c *fiber.Ctx) error {
-	if jwt.IsTokenValid(c.Cookies("token")) != "" {
+	if a.redis.GetToken(c.Cookies("token")) == "" {
 		return c.Redirect("/login")
 	}
 	return c.Next()
