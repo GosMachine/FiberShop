@@ -38,7 +38,7 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 		go a.emailVerification(data.Email)
 	case "change_pass":
 		a.Redis.Client.Set(a.Redis.Ctx, "emailAccess:"+data.Email, true, time.Minute*10)
-		c.Set("HX-Redirect", "/account/settings/change_pass")
+		c.Set("HX-Redirect", "/change_pass")
 		return c.SendStatus(200)
 	case "change_email":
 		//todo продолжить тут

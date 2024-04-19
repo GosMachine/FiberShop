@@ -14,8 +14,8 @@ type App struct {
 	redis *redis.Redis
 }
 
-func New(logger *zap.Logger) *App {
-	return &App{log: logger}
+func New(logger *zap.Logger, redis *redis.Redis) *App {
+	return &App{log: logger, redis: redis}
 }
 
 func (a *App) Logger(c *fiber.Ctx) error {

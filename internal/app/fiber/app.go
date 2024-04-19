@@ -13,7 +13,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/healthcheck"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/recover"
+	// "github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/google"
 	"go.uber.org/zap"
@@ -26,7 +26,7 @@ type App struct {
 
 func New(log *zap.Logger, authClient *auth.Client, db *postgres.Storage, redis *redis.Redis) *App {
 	app := fiber.New()
-	middle := middleware.New(log)
+	middle := middleware.New(log, redis)
 	goth.UseProviders(
 		google.New(os.Getenv("GOOGLE_CLIENT_KEY"), os.Getenv("GOOGLE_CLIENT_SECRET"), "http://localhost:3000/auth/callback/google"),
 	)
@@ -35,7 +35,7 @@ func New(log *zap.Logger, authClient *auth.Client, db *postgres.Storage, redis *
 	app.Static("/", "./web/static")
 	// app.Use(middle.Logger)
 	//test fiber logger
-	app.Use(logger.New(logger.ConfigDefault), healthcheck.New(), recover.New())
+	app.Use(logger.New(logger.ConfigDefault), healthcheck.New())
 	routes := routes.New(app, handle, middle)
 	routes.SetupRoutes()
 	app.Use(handle.HandleNotFound)

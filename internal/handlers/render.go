@@ -11,7 +11,7 @@ import (
 )
 
 func (a *Handle) getData(c *fiber.Ctx, title string) layout.Data {
-	//todo в функциях где я получаю email, можно сначлао вызвыать getData и брать email оттуда
+	//todo наверное будет лучше передавать эмейл толлько там где он нужен
 	timeStart := time.Now()
 
 	email := a.Redis.GetToken(c.Cookies("token"))

@@ -32,6 +32,8 @@ func (r *Routes) setupPublicRoutes() {
 	r.app.Get("/email", r.handle.HandleEmail)
 	r.app.Get("/account_recovery", r.handle.HandleAccountRecovery)
 	r.app.Post("/account_recovery", r.handle.HandleAccountRecoveryForm)
+	r.app.Get("/change_pass", r.handle.HandleChangePass)
+	r.app.Post("/change_pass", r.handle.HandleChangePassForm)
 	r.authRoutes()
 }
 
@@ -55,11 +57,9 @@ func (r *Routes) accountRoutes() {
 	account := r.app.Group("/account")
 	account.Use(r.middle.IsAuthenticated)
 	account.Post("/logout", r.handle.HandleLogout)
-	account.Post("/change_pass", r.handle.HandleChangePassForm)
+	account.Post("/settings/change_pass", r.handle.HandleSettingsChangePass)
 	account.Get("/", r.handle.HandleAccount)
 	account.Get("/settings", r.handle.HandleAccountSettings)
-	account.Post("/settings/change_pass", r.handle.HandleSettingsChangePass)
-	account.Get("/settings/change_pass", r.handle.HandleChangePass)
 	account.Post("/settings/change_email", r.handle.HandleSettingsChangeEmail)
 	account.Post("/email_verification", r.handle.HandleAccountVerification)
 	account.Get("/cart", r.handle.HandleAccountCart)
