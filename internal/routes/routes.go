@@ -26,7 +26,7 @@ func (r *Routes) SetupRoutes() {
 
 func (r *Routes) setupPublicRoutes() {
 	r.app.Get("/", r.handle.HandleHome)
-	r.app.Get("/metrics", monitor.New())
+	r.app.Get("/metrics", monitor.New()) //todo move to admin routes
 	r.app.Post("/email/resend", r.handle.HandleEmailResend)
 	r.app.Post("/email", r.handle.HandleEmailForm)
 	r.app.Get("/email", r.handle.HandleEmail)
@@ -34,6 +34,7 @@ func (r *Routes) setupPublicRoutes() {
 	r.app.Post("/account_recovery", r.handle.HandleAccountRecoveryForm)
 	r.app.Get("/change_pass", r.handle.HandleChangePass)
 	r.app.Post("/change_pass", r.handle.HandleChangePassForm)
+	r.app.Get("/categories/:category", r.handle.HandleCategory)
 	r.authRoutes()
 }
 
