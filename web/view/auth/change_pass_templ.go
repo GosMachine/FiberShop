@@ -31,7 +31,7 @@ func ChangePass(data layout.Data) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"flex justify-center\"><div class=\"h-full px-6 py-12 text-center\"><div class=\"g-12 flex h-full items-center justify-center\"><div class=\"w-full\"><h2 class=\"mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200\">Enter a new password</h2><form hx-post=\"/account/change_pass\" hx-target=\"#changePassError\"><input type=\"hidden\" name=\"email\" value=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"flex justify-center\"><div class=\"h-full px-6 py-12 text-center\"><div class=\"g-12 flex h-full items-center justify-center\"><div class=\"w-full\"><h2 class=\"mb-2 mt-2 text-3xl text-center font-semibold leading-tight dark:text-neutral-200\">Enter a new password</h2><form hx-post=\"/change_pass\" hx-target=\"#changePassError\"><input type=\"hidden\" name=\"email\" value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

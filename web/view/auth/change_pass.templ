@@ -14,7 +14,7 @@ templ ChangePass(data layout.Data) {
                             Enter a new password
                         </h2>
 
-                        <form hx-post="/account/change_pass" hx-target="#changePassError">
+                        <form hx-post="/change_pass" hx-target="#changePassError">
                             <input type="hidden" name="email" value={data.Email}/>
                             <div
                                     class="relative mb-6"

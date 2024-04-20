@@ -41,7 +41,6 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 		c.Set("HX-Redirect", "/change_pass")
 		return c.SendStatus(200)
 	case "change_email":
-		//todo продолжить тут
 		newEmail, err := a.Redis.Client.Get(context.Background(), "change_email:"+data.Email).Result()
 		if err != nil {
 			a.Log.Error("error get newEmail", zap.Error(err))
@@ -52,6 +51,7 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 			a.Log.Error("error change email", zap.Error(err))
 			return c.SendString("Internal error. Please try again.")
 		}
+		a.Redis.SetEmailVerifiedCache(newEmail, true)
 		a.Redis.Client.Del(a.Redis.Ctx, "change_email:"+data.Email, "emailVerified:"+data.Email)
 		c.Cookie(&fiber.Cookie{Name: "token", Secure: true, Value: token, Expires: time.Now().Add(a.Redis.GetTokenTTL(token))})
 		go a.sendEmail(newEmail, "email successfully changed")

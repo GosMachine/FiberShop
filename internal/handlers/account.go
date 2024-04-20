@@ -46,7 +46,6 @@ func (a *Handle) HandleSettingsChangePass(c *fiber.Ctx) error {
 }
 
 func (a *Handle) HandleChangePass(c *fiber.Ctx) error {
-	//todo продолжить тут, не воркает, затем затестить все, перейти на fiber v3, продолжить разделать на микросервисы
 	email := a.Redis.GetToken(c.Cookies("token"))
 	access := a.Redis.Client.Exists(a.Redis.Ctx, "emailAccess:"+email).Val()
 	if access == 0 {

@@ -2,8 +2,6 @@ package handlers
 
 import (
 	"FiberShop/web/view/layout"
-	"fmt"
-	"time"
 
 	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
@@ -12,12 +10,7 @@ import (
 
 func (a *Handle) getData(c *fiber.Ctx, title string) layout.Data {
 	//todo наверное будет лучше передавать эмейл толлько там где он нужен
-	timeStart := time.Now()
-
 	email := a.Redis.GetToken(c.Cookies("token"))
-
-	fmt.Println(time.Since(timeStart))
-
 	FinalData := layout.Data{
 		Title: title,
 		Email: email,
