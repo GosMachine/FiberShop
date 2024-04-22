@@ -4,5 +4,7 @@ http_server:
 clients:
   auth:
     address: "localhost:44043"
-    timeout: 2
-    retries_count: 1
+  product:
+    address: "localhost:44045"
+  timeout: 2
+  retries_count: 1

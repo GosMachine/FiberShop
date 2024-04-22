@@ -3,7 +3,7 @@ module FiberShop
 go 1.22
 
 require (
-	github.com/GosMachine/protos v0.4.1
+	github.com/GosMachine/protos v0.4.3
 	github.com/a-h/templ v0.2.663
 	github.com/gofiber/fiber/v2 v2.52.4
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
@@ -14,6 +14,7 @@ require (
 	github.com/shareed2k/goth_fiber v0.3.0
 	go.uber.org/zap v1.27.0
 	google.golang.org/grpc v1.63.2
+	google.golang.org/protobuf v1.33.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.9
@@ -52,7 +53,6 @@ require (
 	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240415180920-8c6c420018be // indirect
-	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect

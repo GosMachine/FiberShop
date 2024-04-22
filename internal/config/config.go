@@ -17,13 +17,14 @@ type HTTPServer struct {
 }
 
 type Client struct {
-	Address      string `yaml:"address"`
-	Timeout      int    `yaml:"timeout"`
-	RetriesCount int    `yaml:"retries_count"`
+	Address string `yaml:"address"`
 }
 
 type ClientsConfig struct {
-	Auth Client `yaml:"auth"`
+	Auth         Client `yaml:"auth"`
+	Product      Client `yaml:"product"`
+	Timeout      int    `yaml:"timeout"`
+	RetriesCount int    `yaml:"retries_count"`
 }
 
 func MustLoad() *Config {

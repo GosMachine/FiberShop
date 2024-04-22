@@ -1,8 +1,18 @@
 package handlers
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"FiberShop/web/view/layout"
+	"context"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func (a *Handle) HandleCategory(c *fiber.Ctx) error {
-	//todo продолжить тут, подключить сервис продуктов
+	categoryName := c.Params("category")
+	_, err := a.Grpc.Product.GetCategory(context.Background(), categoryName)
+	if err != nil {
+		return a.renderTemplate(c, layout.NotFound(a.getData(c, categoryName)))
+	}
+	//todo тут нужно сделать темплейт и его рендерить (страница категории)
 	return c.Redirect("/")
 }

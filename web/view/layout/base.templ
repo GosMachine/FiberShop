@@ -3,6 +3,7 @@ package layout
 type Data struct {
     Title string
     Email string
+    Categories []string
 }
 
 templ Base(data Data) {
@@ -186,16 +187,15 @@ templ navbar(data Data) {
                         ><span class="text-[1.1rem] font-semibold">F.A.Q</span></a>
                     </li>
                      <!-- Categories -->
-                     for i, v := range {
-
-                     }
-                    <li class="mb-4 lg:mb-0 lg:pr-2" data-te-nav-item-ref>
-                        <a
-                                class="text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
-                                href="#"
-                                data-te-nav-link-ref
-                        ><span class="text-[1.1rem] font-semibold">All category</span></a>
-                    </li>
+                    for _, v := range data.Categories {
+                        <li class="mb-4 lg:mb-0 lg:pr-2" data-te-nav-item-ref>
+                            <a
+                                    class="text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+                                    href={templ.URL("/categories/"+v)}
+                                    data-te-nav-link-ref
+                            ><span class="text-[1.1rem] font-semibold">{v}</span></a>
+                        </li>
+                    }
                     <li
                             class="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
                             data-te-nav-item-ref

@@ -44,7 +44,7 @@ func (a *Handle) HandleRegisterForm(c *fiber.Ctx) error {
 }
 
 func (a *Handle) HandleLogout(c *fiber.Ctx) error {
-	go a.Client.Logout(context.Background(), c.Cookies("token"))
+	go a.Grpc.Auth.Logout(context.Background(), c.Cookies("token"))
 	c.Cookie(&fiber.Cookie{Name: "token", Secure: true, Value: "delete", Expires: time.Now().Add(-1 * time.Second)})
 	return c.Redirect("/")
 }
@@ -64,9 +64,9 @@ func (a *Handle) auth(c *fiber.Ctx, action string) error {
 		if data.Password != data.ConfirmPassword {
 			return c.SendString("Password mismatch.")
 		}
-		token, err = a.Client.Register(context.Background(), data.Email, data.Password, c.IP(), data.Remember)
+		token, err = a.Grpc.Auth.Register(context.Background(), data.Email, data.Password, c.IP(), data.Remember)
 	case "login":
-		token, err = a.Client.Login(context.Background(), data.Email, data.Password, c.IP(), data.Remember)
+		token, err = a.Grpc.Auth.Login(context.Background(), data.Email, data.Password, c.IP(), data.Remember)
 	}
 	if err != nil {
 		if st, ok := status.FromError(err); ok {
@@ -97,7 +97,7 @@ func (a *Handle) HandleOAuthCallback(c *fiber.Ctx) error {
 		a.Log.Error("login error", zap.Error(err))
 		return c.SendString("Internal error. Please try again.")
 	}
-	token, err := a.Client.OAuth(context.Background(), user.Email, c.IP())
+	token, err := a.Grpc.Auth.OAuth(context.Background(), user.Email, c.IP())
 	if err != nil {
 		a.Log.Error("login error", zap.Error(err))
 		return c.SendString("Internal error. Please try again.")

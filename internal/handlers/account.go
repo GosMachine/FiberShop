@@ -63,7 +63,7 @@ func (a *Handle) HandleChangePassForm(c *fiber.Ctx) error {
 	if data.Password != data.ConfirmPassword {
 		return c.SendString("Password mismatch.")
 	}
-	token, err := a.Client.ChangePass(context.Background(), data.Email, data.Password, c.IP(), c.Cookies("token"))
+	token, err := a.Grpc.Auth.ChangePass(context.Background(), data.Email, data.Password, c.IP(), c.Cookies("token"))
 	if err != nil {
 		a.Log.Error("changePass api client error", zap.Error(err))
 		return c.SendString("Internal error. Please try again.")

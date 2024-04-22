@@ -4,7 +4,8 @@ import (
 	fiberapp "FiberShop/internal/app/fiber"
 	"FiberShop/internal/database/postgres"
 	"FiberShop/internal/database/redis"
-	"FiberShop/internal/transport/grpc/auth"
+	"FiberShop/internal/transport/grpc"
+
 	"go.uber.org/zap"
 )
 
@@ -12,13 +13,13 @@ type App struct {
 	FiberApp *fiberapp.App
 }
 
-func New(log *zap.Logger, authClient *auth.Client) *App {
+func New(log *zap.Logger, grpc *grpc.Grpc) *App {
 	db, err := postgres.New()
 	if err != nil {
 		panic(err)
 	}
-	cache := redis.New(log, authClient)
-	fiberApp := fiberapp.New(log, authClient, db, cache)
+	cache := redis.New(log, grpc.Auth)
+	fiberApp := fiberapp.New(log, grpc, db, cache)
 	return &App{
 		FiberApp: fiberApp,
 	}

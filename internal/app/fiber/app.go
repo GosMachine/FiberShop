@@ -6,7 +6,7 @@ import (
 	"FiberShop/internal/handlers"
 	"FiberShop/internal/middleware"
 	"FiberShop/internal/routes"
-	"FiberShop/internal/transport/grpc/auth"
+	"FiberShop/internal/transport/grpc"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -24,13 +24,13 @@ type App struct {
 	app *fiber.App
 }
 
-func New(log *zap.Logger, authClient *auth.Client, db *postgres.Storage, redis *redis.Redis) *App {
+func New(log *zap.Logger, grpc *grpc.Grpc, db *postgres.Storage, redis *redis.Redis) *App {
 	app := fiber.New()
 	middle := middleware.New(redis)
 	goth.UseProviders(
 		google.New(os.Getenv("GOOGLE_CLIENT_KEY"), os.Getenv("GOOGLE_CLIENT_SECRET"), "http://localhost:3000/auth/callback/google"),
 	)
-	handle := handlers.New(log, authClient, db, redis)
+	handle := handlers.New(log, grpc, db, redis)
 	app.Use(cors.New())
 	app.Static("/", "./web/static")
 	app.Use(logger.New(logger.ConfigDefault), healthcheck.New(), recover.New())

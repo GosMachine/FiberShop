@@ -46,7 +46,7 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 			a.Log.Error("error get newEmail", zap.Error(err))
 			return c.SendString("Internal error. Please try again.")
 		}
-		token, err := a.Client.ChangeEmail(context.Background(), data.Email, newEmail, c.Cookies("token"))
+		token, err := a.Grpc.Auth.ChangeEmail(context.Background(), data.Email, newEmail, c.Cookies("token"))
 		if err != nil {
 			a.Log.Error("error change email", zap.Error(err))
 			return c.SendString("Internal error. Please try again.")
@@ -62,7 +62,7 @@ func (a *Handle) HandleEmailForm(c *fiber.Ctx) error {
 }
 
 func (a *Handle) emailVerification(email string) {
-	if err := a.Client.EmailVerify(context.Background(), email); err != nil {
+	if err := a.Grpc.Auth.EmailVerify(context.Background(), email); err != nil {
 		a.Log.Error("error verify email", zap.Error(err))
 		return
 	}

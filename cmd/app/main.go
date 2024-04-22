@@ -3,8 +3,7 @@ package main
 import (
 	"FiberShop/internal/app"
 	"FiberShop/internal/config"
-	"FiberShop/internal/transport/grpc/auth"
-	"context"
+	"FiberShop/internal/transport/grpc"
 	"os"
 	"os/signal"
 	"syscall"
@@ -22,13 +21,12 @@ func main() {
 	cfg := config.MustLoad()
 	log := setupLogger()
 	log.Info("starting application", zap.Any("config", cfg))
-	authClient, err := auth.New(context.Background(), cfg.Clients.Auth.Address,
-		cfg.Clients.Auth.Timeout, cfg.Clients.Auth.RetriesCount)
+	grpc, err := grpc.New(cfg)
 	if err != nil {
-		log.Error("failed to init auth client", zap.Error(err))
+		log.Error("failed to init grpc clients", zap.Error(err))
 		os.Exit(1)
 	}
-	application := app.New(log, authClient)
+	application := app.New(log, grpc)
 	go application.FiberApp.Run(cfg.Address)
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)

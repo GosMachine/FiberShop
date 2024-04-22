@@ -11,19 +11,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4
-    ports:
-      - "80:80"
-    depends_on:
-      - postgres
-    networks:
-      - shop
-    env_file:
-      - .env
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin/data
-
   redis:
     image: redis
     ports:
@@ -43,10 +30,20 @@ services:
       - .env
     depends_on:
       - postgres
+
+  product:
+    image: gosmach1ne/productservice
+    ports:
+      - "44045:44045"
+    networks:
+      - shop
+    env_file:
+      - .env
+    depends_on:
+      - postgres
 networks:
   shop:
 
 volumes:
   postgres_data:
   redis_data:
-  pgadmin_data:
